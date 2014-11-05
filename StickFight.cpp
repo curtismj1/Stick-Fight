@@ -1,17 +1,11 @@
-// Programming 2D Games
-// Copyright (c) 2011, 2012 by: 
-// Charles Kelly
-// Collision types demo
-// Press '1', '2' or '3' to select collision type for ship.
-
 #include "StickFight.h"
 
 //=============================================================================
 // Constructor
 //=============================================================================
-StickFight::StickFight()
-{
-	//nothing here, move on
+StickFight::StickFight() {
+	nWalls = 1;
+	walls = new Entity[nWalls];
 }
 
 //=============================================================================
@@ -37,7 +31,7 @@ void StickFight::initialize(HWND hwnd)
 //=============================================================================
 void StickFight::update()
 {
-
+	one.update(frameTime);
 }
 
 //=============================================================================
@@ -53,7 +47,7 @@ void StickFight::ai()
 //=============================================================================
 void StickFight::collisions()
 {
-
+	one.collisions(walls, nWalls);
 }
 
 //=============================================================================
@@ -61,7 +55,9 @@ void StickFight::collisions()
 //=============================================================================
 void StickFight::render()
 {
-
+	graphics->spriteBegin();
+	one.draw();
+	graphics->spriteEnd();
 }
 
 //=============================================================================

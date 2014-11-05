@@ -12,6 +12,7 @@ class StickFight;
 #include "game.h"
 #include "textureManager.h"
 #include "image.h"
+#include "Figure.h"
 #include <cmath>
 
 //=============================================================================
@@ -35,7 +36,10 @@ public:
     void releaseAll();
     void resetAll();
 private:
-
+	Figure one;
+	
+	Entity* walls;
+	int nWalls;
 };
 
 #endif
