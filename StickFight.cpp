@@ -1,10 +1,15 @@
 #include "StickFight.h"
 
+const std::string images[] = { "img/figure.bmp", "img/wall.bmp"};
+const int nTextures = 2;
+
 //=============================================================================
 // Constructor
 //=============================================================================
 StickFight::StickFight() {
-	nWalls = 1;
+	textures = new TextureManager[nTextures];
+
+	nWalls = 2;
 	walls = new Entity[nWalls];
 }
 
@@ -23,7 +28,39 @@ StickFight::~StickFight()
 void StickFight::initialize(HWND hwnd)
 {
     Game::initialize(hwnd); // throws GameError
+	for (int i = 0; i < nTextures; i++)
+		if (!textures[i].initialize(graphics, images[i].c_str())) 
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing texture"));
 
+	for (int i = 0; i < nWalls; i++) {
+		if (!walls[i].initialize(this, 80, 4, 0, &textures[1]))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing wall"));
+		walls[i].setCollisionType(entityNS::BOX);
+		RECT r;
+		r.left =-walls[i].getWidth() / 2;
+		r.right = walls[i].getWidth() / 2;
+		r.top = -walls[i].getHeight() / 2;
+		r.bottom = walls[i].getHeight() / 2;
+		walls[i].setEdge(r);
+	}
+
+	if (!one.initialize(this, 0, 0, 0, &textures[0]))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player one"));
+
+	text.initialize(graphics, 12, false, false, "Cambria");
+
+	walls[0].setX(50);
+	walls[0].setY(400);
+	walls[0].setScale(5);
+
+	walls[1].setX(100);
+	walls[1].setY(300);
+	walls[1].setScale(5);
+
+	one.setX(60);
+	one.setY(350);
+	one.setScale(25);
+	one.setCollisionRadius(1);
 }
 
 //=============================================================================
@@ -31,7 +68,9 @@ void StickFight::initialize(HWND hwnd)
 //=============================================================================
 void StickFight::update()
 {
+	one.readInput();
 	one.update(frameTime);
+	for (int i = 0; i < nWalls; i++) walls[i].update(frameTime);
 }
 
 //=============================================================================
@@ -50,6 +89,7 @@ void StickFight::collisions()
 	one.collisions(walls, nWalls);
 }
 
+#include <string>
 //=============================================================================
 // Render game items
 //=============================================================================
@@ -57,6 +97,7 @@ void StickFight::render()
 {
 	graphics->spriteBegin();
 	one.draw();
+	for (int i = 0; i < nWalls; i++) walls[i].draw();
 	graphics->spriteEnd();
 }
 

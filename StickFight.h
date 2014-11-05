@@ -13,6 +13,7 @@ class StickFight;
 #include "textureManager.h"
 #include "image.h"
 #include "Figure.h"
+#include "textDX.h"
 #include <cmath>
 
 //=============================================================================
@@ -36,6 +37,9 @@ public:
     void releaseAll();
     void resetAll();
 private:
+	TextureManager* textures;
+	TextDX text;
+
 	Figure one;
 	
 	Entity* walls;
