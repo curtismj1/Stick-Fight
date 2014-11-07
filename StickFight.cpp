@@ -8,7 +8,6 @@ const int nTextures = 2;
 //=============================================================================
 StickFight::StickFight() {
 	textures = new TextureManager[nTextures];
-
 	nWalls = 1;
 	walls = new Entity[nWalls];
 }
@@ -28,9 +27,14 @@ StickFight::~StickFight()
 void StickFight::initialize(HWND hwnd)
 {
     Game::initialize(hwnd); // throws GameError
-	for (int i = 0; i < nTextures; i++)
+	for (int i = 0; i < nTextures; i++){
 		if (!textures[i].initialize(graphics, images[i].c_str())) 
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing texture"));
+
+	}
+	if (!playerTexture.initialize(graphics,SPRITE_SHEET))
+        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player texture"));
+
 
 	for (int i = 0; i < nWalls; i++) {
 		if (!walls[i].initialize(this, 40, 2, 0, &textures[1]))
@@ -53,9 +57,9 @@ void StickFight::initialize(HWND hwnd)
 	walls[0].setY(400);
 	walls[0].setScale(13);
 
-	one.setX(60);
+	one.setX(1000);
 	one.setY(350);
-	one.setScale(25);
+	one.setScale(100);
 	one.setCollisionRadius(1);
 }
 

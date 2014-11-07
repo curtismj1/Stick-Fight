@@ -38,7 +38,9 @@ public:
     void resetAll();
 private:
 	TextureManager* textures;
+	TextureManager playerTexture;
 	TextDX text;
+	Image p1;
 
 	Figure one;
 	
