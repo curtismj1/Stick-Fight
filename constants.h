@@ -79,6 +79,8 @@ const char GAME_TITLE[] = "AI";
 const bool FULLSCREEN = false;              // windowed or fullscreen
 const UINT GAME_WIDTH =  640;               // width of game in pixels
 const UINT GAME_HEIGHT = 480;               // height of game in pixels
+const int SPRITE_SHEET_WIDTH = 240;
+const float SPRITE_SHEET_SCALE = .15;
 
 // game
 const double PI = 3.14159265;
@@ -94,6 +96,7 @@ const float   COLLISION_RADIUS = 29;
 // graphic images
 const char PUCK_IMAGE[] = "pictures\\homework.jpg";  // game textures
 const char PADDLE_IMAGE[] =     "pictures\\student.jpg";      // menu texture
+const char SPRITE_SHEET[] = "img\\sprite_sheet.png";
 
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used
