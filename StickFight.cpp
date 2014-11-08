@@ -1,7 +1,7 @@
 #include "StickFight.h"
 
-const std::string images[] = { "img/figure.bmp", "img/wall.bmp"};
-const int nTextures = 2;
+const std::string images[] = { "img/swordSheet.png", "img/figure.bmp", "img/wall.bmp"};
+const int nTextures = 3;
 
 //=============================================================================
 // Constructor
@@ -32,12 +32,9 @@ void StickFight::initialize(HWND hwnd)
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing texture"));
 
 	}
-	if (!playerTexture.initialize(graphics,SPRITE_SHEET))
-        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player texture"));
-
 
 	for (int i = 0; i < nWalls; i++) {
-		if (!walls[i].initialize(this, 40, 2, 0, &textures[1]))
+		if (!walls[i].initialize(this, 40, 2, 0, &textures[2]))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing wall"));
 		walls[i].setCollisionType(entityNS::BOX);
 		RECT r;
@@ -48,7 +45,7 @@ void StickFight::initialize(HWND hwnd)
 		walls[i].setEdge(r);
 	}
 
-	if (!one.initialize(this, 0, 0, 0, &textures[0]))
+	if (!one.initialize(this, 256, 256, 4, &textures[0]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player one"));
 
 	text.initialize(graphics, 12, false, false, "Cambria");
@@ -57,10 +54,11 @@ void StickFight::initialize(HWND hwnd)
 	walls[0].setY(400);
 	walls[0].setScale(13);
 
-	one.setX(1000);
-	one.setY(350);
-	one.setScale(100);
-	one.setCollisionRadius(1);
+	one.setX(10);
+	one.setY(250);
+	one.setFrames(0, 3);
+	one.setScale(0.4);
+	one.setCollisionRadius((one.getHeight() - 30) / 2);
 }
 
 //=============================================================================

@@ -10,19 +10,22 @@ Figure::Figure() {
 }
 
 bool Figure::initialize(Game *gamePtr, int width, int height, int ncols, TextureManager *textureM) {
-	hitbox.initialize(gamePtr, width, height, ncols, textureM);
+	hitbox.initialize(gamePtr, 0, 0, 0, textureM + 1);
 	hitbox.setScale(10);
 	return Entity::initialize(gamePtr, width, height, ncols, textureM);
 }
 
 void Figure::readInput() {
+	isWalking = false;
 	if (input->isKeyDown(VK_LEFT) && velocity.x > -maxHorizontalSpeed) {
 		velocity.x += -0.2;
 		facingRight = false;
+		isWalking = true;
 	}
 	if (input->isKeyDown(VK_RIGHT) && velocity.x < maxHorizontalSpeed) {
 		velocity.x += 0.2;
 		facingRight = true;
+		isWalking = true;
 	}
 	if (input->isKeyDown(VK_UP) && onGround) {
 		velocity.y = -5;
@@ -40,6 +43,20 @@ void Figure::readInput() {
 		}
 
 	} else isAttacking = false;
+
+	if (isWalking) {
+		setFrameDelay(0.1);
+		if (facingRight)
+			setFrames(4, 7);
+		else
+			setFrames(12, 15);
+	} else {
+		setFrameDelay(0.5);
+		if (facingRight)
+			setFrames(0, 3);
+		else
+			setFrames(8, 11);
+	}
 }
 
 void Figure::update(float frameTime) {

@@ -15,6 +15,7 @@ private:
 
 	bool facingRight;
 	bool isAttacking;
+	bool isWalking;
 	Entity hitbox;
 };
 #endif
