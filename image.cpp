@@ -1,5 +1,5 @@
 // Programming 2D Games
-// Copyright (c) 2011 by: 
+// Copyright (c) 2011 by:
 // Charles Kelly
 // Image.cpp v1.0
 
@@ -129,23 +129,44 @@ void Image::draw(SpriteData sd, COLOR_ARGB color)
 //=============================================================================
 void Image::update(float frameTime)
 {
-    if (endFrame - startFrame > 0)          // if animated sprite
+  bool animateForward = endFrame-startFrame>0;
+    if (endFrame - startFrame != 0)          // if animated sprite
     {
         animTimer += frameTime;             // total elapsed time
         if (animTimer > frameDelay)
         {
             animTimer -= frameDelay;
-            currentFrame++;
-            if (currentFrame < startFrame || currentFrame > endFrame)
-            {
-                if(loop == true)            // if looping animation
-                    currentFrame = startFrame;
-                else                        // not looping animation
-                {
-                    currentFrame = endFrame;
-                    animComplete = true;    // animation complete
-                }
-            }
+
+      // Animate forward or backward
+      if(animateForward)
+        currentFrame++;
+      else
+        currentFrame--;
+      if(animateForward)
+      {
+        if (currentFrame < startFrame || currentFrame > endFrame)
+        {
+          if(loop == true)            // if looping animation
+            currentFrame = startFrame;
+          else                        // not looping animation
+          {
+            currentFrame = endFrame;
+            animComplete = true;    // animation complete
+          }
+        }
+      } else {
+        if (currentFrame > startFrame || currentFrame < endFrame)
+        {
+          if(loop == true)            // if looping animation
+            currentFrame = startFrame;
+          else                        // not looping animation
+          {
+            currentFrame = endFrame;
+            animComplete = true;    // animation complete
+          }
+        }
+      }
+
             setRect();                      // set spriteData.rect
         }
     }
@@ -154,7 +175,7 @@ void Image::update(float frameTime)
 //=============================================================================
 // Set the current frame of the image
 //=============================================================================
-void Image::setCurrentFrame(int c) 
+void Image::setCurrentFrame(int c)
 {
     if(c >= 0)
     {
@@ -167,7 +188,7 @@ void Image::setCurrentFrame(int c)
 //=============================================================================
 //  Set spriteData.rect to draw currentFrame
 //=============================================================================
-inline void Image::setRect() 
+inline void Image::setRect()
 {
     // configure spriteData.rect to draw currentFrame
     spriteData.rect.left = (currentFrame % cols) * spriteData.width;
@@ -175,6 +196,5 @@ inline void Image::setRect()
     spriteData.rect.right = spriteData.rect.left + spriteData.width;
     spriteData.rect.top = (currentFrame / cols) * spriteData.height;
     // bottom edge + 1
-    spriteData.rect.bottom = spriteData.rect.top + spriteData.height;       
+    spriteData.rect.bottom = spriteData.rect.top + spriteData.height;
 }
-
