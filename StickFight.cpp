@@ -63,7 +63,7 @@ void StickFight::initialize(HWND hwnd)
 	one.setX(100);
 	one.setY(300);
 	one.setScale(.5);
-	one.setCollisionRadius(one.getHeight()*one.getScale()-10/2);
+	one.setCollisionRadius(one.getHeight()*one.getScaleX()-10/2);
 	one.setFrameDelay(.2f);
 	one.setFrames(6,11);
 
@@ -81,8 +81,8 @@ void StickFight::initialize(HWND hwnd)
 	mainMenu->setMenuHeading("Options");
 
 	std::vector<std::string> menuItems;
-	menuItems.push_back("New Game");	// Menu 1
-	menuItems.push_back("SoundFX");	// Menu 2
+	menuItems.push_back("New Game >");	// Menu 1
+	menuItems.push_back("SoundFX >");	// Menu 2
 	menuItems.push_back("I'm Feeling Lucky");
 	menuItems.push_back("Credits");
 	mainMenu->setMenuItems(menuItems);

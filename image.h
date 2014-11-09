@@ -56,7 +56,10 @@ class Image
     virtual float getY()        {return spriteData.y;}
 
     // Return scale factor.
-    virtual float getScale()    {return spriteData.scale;}
+    virtual float getScaleX()    {return spriteData.scaleX;}
+
+	// Return scale factor.
+    virtual float getScaleY()    {return spriteData.scaleY;}
 
     // Return width.
     virtual int   getWidth()    {return spriteData.width;}
@@ -65,10 +68,10 @@ class Image
     virtual int   getHeight()   {return spriteData.height;}
 
     // Return center X.
-    virtual float getCenterX()      {return spriteData.x + spriteData.width/2*getScale();}
+    virtual float getCenterX()      {return spriteData.x + spriteData.width/2*getScaleX();}
 
     // Return center Y.
-    virtual float getCenterY()      {return spriteData.y + spriteData.height/2*getScale();}
+    virtual float getCenterY()      {return spriteData.y + spriteData.height/2*getScaleY();}
 
     // Return rotation angle in degrees.
     virtual float getDegrees()      {return spriteData.angle*(180.0f/(float)PI);}
@@ -108,7 +111,11 @@ class Image
     virtual void setY(float newY)   {spriteData.y = newY;}
 
     // Set scale.
-    virtual void setScale(float s)  {spriteData.scale = s;}
+    virtual void setScale(float s)  {spriteData.scaleX = s; spriteData.scaleY = s;}
+	// Set scaleX.
+    virtual void setScaleX(float s)  {spriteData.scaleX = s;}
+	// Set scaleY.
+    virtual void setScaleY(float s)  {spriteData.scaleY = s;}
 
     // Set rotation angle in degrees.
     // 0 degrees is up. Angles progress clockwise.
