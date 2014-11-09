@@ -8,6 +8,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <windows.h>
+#include <string>
 
 //=============================================================================
 // Function templates for safely dealing with pointer referenced items.
@@ -106,6 +107,16 @@ const UCHAR PADDLE_DOWN = VK_DOWN;
 
 //
 
+// Assets
+const std::string images[] = { "img/swordSheet.png",
+	"img/figure.bmp",
+	"img/wall.bmp",
+	"img/sprite_sheet.png",
+	"img/figure.bmp",
+	"img/health.bmp",
+	"img/splash.png"
+};
+const int nTextures = 7;
 
 
 // audio files required by audio.cpp

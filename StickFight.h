@@ -42,6 +42,7 @@ private:
 	TextureManager* textures;
 	TextDX text;
 	Image p1;
+	Image splashScreen;
 
 	Boxer one;
 	Entity oneHealth;

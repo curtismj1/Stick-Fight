@@ -1,8 +1,5 @@
 #include "StickFight.h"
 
-const std::string images[] = { "img/swordSheet.png", "img/figure.bmp", "img/wall.bmp", "img/sprite_sheet.png", "img/figure.bmp", "img/health.bmp"};
-const int nTextures = 6;
-
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -36,6 +33,9 @@ void StickFight::initialize(HWND hwnd)
 
 	}
 
+	if (!splashScreen.initialize(graphics, GAME_WIDTH, GAME_HEIGHT, 0, &textures[6]))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing splash screen"));
+
 	for (int i = 0; i < nWalls; i++) {
 		if (!walls[i].initialize(this, 40, 2, 0, &textures[2]))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing wall"));
@@ -57,7 +57,8 @@ void StickFight::initialize(HWND hwnd)
 	if (!two.initialize(this, 256, 256, 4, &textures[0]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player two"));
 
-	text.initialize(graphics, 12, false, false, "Cambria");
+	text.initialize(graphics, 30, false, false, "Cambria");
+	text.setFontColor(graphicsNS::RED);
 
 	walls[0].setX(50);
 	walls[0].setY(400);
@@ -174,7 +175,6 @@ void StickFight::collisions()
 	}
 }
 
-#include <string>
 //=============================================================================
 // Render game items
 //=============================================================================
@@ -186,6 +186,13 @@ void StickFight::render()
 	} else {	// All other cases
 		switch(gameStates) {
 		case SPLASH_SCREEN:
+			splashScreen.draw();
+			if(timeInState<.75) {
+				text.print("PRESS SPACE TO CONTINUE",GAME_WIDTH/2-160,GAME_HEIGHT-40);
+			} else if(timeInState>1.5) {
+				timeInState = 0.0;
+			}
+
 			// Render splash screen
 			break;
 		case MENU:
@@ -248,7 +255,7 @@ void StickFight::resetAll()
 void StickFight::gameStateUpdate()
 {
 	timeInState += frameTime;
-	if (gameStates==SPLASH_SCREEN && input->anyKeyPressed())
+	if (gameStates==SPLASH_SCREEN && input->wasKeyPressed(VK_SPACE))
 	{
 		gameStates = MENU;
 		timeInState = 0;
