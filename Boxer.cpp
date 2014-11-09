@@ -11,19 +11,14 @@ void Boxer::setCollisionBox() {
 	edge.bottom = (getHeight() / 2) - 20;
 }
 
-void Boxer::readInput() {
-	Figure::readInput();
+void Boxer::animate() {
 	if (isWalking) {
 		setFrameDelay(0.1);
-		if (facingRight)
-			setFrames(4, 7);
-		else
-			setFrames(12, 15);
+		setFrames(0, 5);
+		flipHorizontal(!facingRight);
 	} else {
-		setFrameDelay(0.5);
-		if (facingRight)
-			setFrames(0, 3);
-		else
-			setFrames(8, 11);
+		setFrameDelay(0.2);
+		setFrames(6, 11);
+		flipHorizontal(!facingRight);
 	}
 }

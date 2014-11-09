@@ -1,7 +1,8 @@
 #include "Figure.h"
 #include "StickFight.h"
 
-const float maxHorizontalSpeed = 2.0;
+const float maxHorizontalSpeed = 1.0;
+const float maxAIHorizontalSpeed = 0.5;
 
 Figure::Figure() {
 	collisionType = entityNS::BOX;
@@ -35,18 +36,18 @@ void Figure::setCollisionBox() {
 
 void Figure::readInput() {
 	isWalking = false;
-	if (GetAsyncKeyState('A') && velocity.x > -maxHorizontalSpeed) {
+	if (input->isKeyDown(VK_LEFT) && velocity.x > -maxHorizontalSpeed) {
 		velocity.x += -0.2;
 		facingRight = false;
 		isWalking = true;
 	}
-	if (GetAsyncKeyState('D') && velocity.x < maxHorizontalSpeed) {
+	if (input->isKeyDown(VK_RIGHT) && velocity.x < maxHorizontalSpeed) {
 		velocity.x += 0.2;
 		facingRight = true;
 		isWalking = true;
 	}
-	if (GetAsyncKeyState('W') && onGround) {
-		velocity.y = -5;
+	if (input->isKeyDown(VK_UP) && onGround) {
+		velocity.y = -4;
 		onGround = false;
 	}
 
@@ -61,6 +62,7 @@ void Figure::readInput() {
 		}
 
 	} else isAttacking = false;
+	animate();
 }
 
 void Figure::update(float frameTime) {
@@ -85,4 +87,19 @@ void Figure::collisions(Entity* walls, int nWalls) {
 			velocity.y = 0;
 			onGround = true;
 		}
+}
+
+void Figure::Ai(Figure* enemy) {
+	if (enemy->getX() > getX()) {
+		if (velocity.x < maxAIHorizontalSpeed)
+			velocity.x += 0.2;
+		facingRight = true;
+		isWalking = true;
+	} else {
+		if (velocity.x > -maxAIHorizontalSpeed)
+			velocity.x += -0.2;
+		facingRight = false;
+		isWalking = true;
+	}
+	animate();
 }
