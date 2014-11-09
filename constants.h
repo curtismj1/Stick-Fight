@@ -93,11 +93,6 @@ const RECT  COLLISION_BOX_PADDLE = {-45,-10,45,10};
 const RECT COLLISION_BOX_PUCK = {-32, -32, 32, 32};
 const float   COLLISION_RADIUS = 29;
 
-// graphic images
-const char PUCK_IMAGE[] = "pictures\\homework.jpg";  // game textures
-const char PADDLE_IMAGE[] =     "pictures\\student.jpg";      // menu texture
-const char SPRITE_SHEET[] = "img\\sprite_sheet.png";
-
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used
 // it would be possible to save and restore key mappings from a data file.

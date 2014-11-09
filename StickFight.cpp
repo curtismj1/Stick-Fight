@@ -1,7 +1,7 @@
 #include "StickFight.h"
 
-const std::string images[] = { "img/swordSheet.png", "img/figure.bmp", "img/wall.bmp"};
-const int nTextures = 3;
+const std::string images[] = { "img/swordSheet.png", "img/figure.bmp", "img/wall.bmp", "img/sprite_sheet.png", "img/figure.bmp"};
+const int nTextures = 5;
 
 //=============================================================================
 // Constructor
@@ -33,9 +33,6 @@ void StickFight::initialize(HWND hwnd)
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing texture"));
 
 	}
-	if (!playerTexture.initialize(graphics,SPRITE_SHEET))
-        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player texture"));
-
 
 	for (int i = 0; i < nWalls; i++) {
 		if (!walls[i].initialize(this, 40, 2, 0, &textures[2]))
@@ -49,7 +46,7 @@ void StickFight::initialize(HWND hwnd)
 		walls[i].setEdge(r);
 	}
 
-	if (!one.initialize(this, 180, 240, 6, &playerTexture))
+	if (!one.initialize(this, 180, 240, 6, &textures[3]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player one"));
 
 
@@ -131,18 +128,6 @@ void StickFight::update()
 		one.update(frameTime);
 		two.readInput();
 		two.update(frameTime);
-		if(!one.key_down_last_frame){
-			if(one.getCurrentFrame() <= 6 || one.getCurrentFrame() > 11){
-				one.setFrames(6,11);
-			}
-			if(one.getCurrentFrame() == 11){
-				one.setFrames(11,6);
-			}
-			int test = one.getCurrentFrame();
-			one.setFrameDelay(0.1f);
-		}
-		one.key_down_last_frame = false;
-
 		for (int i = 0; i < nWalls; i++) walls[i].update(frameTime);
 	}
 	if(input->wasKeyPressed(VK_ESCAPE)) activeMenu = !activeMenu;
@@ -163,6 +148,18 @@ void StickFight::collisions()
 {
 	one.collisions(walls, nWalls);
 	two.collisions(walls, nWalls);
+
+	VECTOR2 cv;
+	Entity* hb = one.getHitbox();
+	if (hb != 0 && two.collidesWith(*hb, cv)) {
+		//kick back?
+		//deal damage
+	}
+	hb = two.getHitbox();
+	if (hb != 0 && one.collidesWith(*hb, cv)) {
+		//kick back?
+		//deal damage
+	}
 }
 
 #include <string>

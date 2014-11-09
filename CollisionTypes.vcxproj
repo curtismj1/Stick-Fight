@@ -89,7 +89,6 @@
   <ItemGroup>
     <ClCompile Include="audio.cpp" />
     <ClCompile Include="Figure.cpp" />
-    <ClCompile Include="Figure2.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="StickFight.cpp" />
     <ClCompile Include="entity.cpp" />
@@ -104,7 +103,6 @@
   <ItemGroup>
     <ClInclude Include="audio.h" />
     <ClInclude Include="Figure.h" />
-    <ClInclude Include="Figure2.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="StickFight.h" />
     <ClInclude Include="constants.h" />
@@ -114,6 +112,7 @@
     <ClInclude Include="graphics.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="input.h" />
+    <ClInclude Include="SwordGuy.h" />
     <ClInclude Include="textDX.h" />
     <ClInclude Include="textureManager.h" />
   </ItemGroup>
