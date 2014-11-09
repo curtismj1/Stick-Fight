@@ -115,9 +115,9 @@ const UCHAR PADDLE_DOWN = VK_DOWN;
 
 // audio files required by audio.cpp
 // WAVE_BANK must be location of .xwb file.
-const char WAVE_BANK[]  = "audio\\Win\\WavesExample1.xwb";
+const char WAVE_BANK[]  = "audio\\Win\\stick_wave_bank.xwb";
 // SOUND_BANK must be location of .xsb file.
-const char SOUND_BANK[] = "audio\\Win\\SoundsExample1.xsb";
+const char SOUND_BANK[] = "audio\\Win\\stick_sound_bank.xsb";
 
 // audio cues
 const char BEEP1[] = "beep1";
@@ -129,5 +129,12 @@ const char HIT[]   = "hit";
 // Pattern Step Action
 enum PATTERN_STEP_ACTION {NONE, UP, DOWN, LEFT, RIGHT, TRACK, EVADE, UPLEFT};
 
+// Menu Constants
+const int MENU_OFFSET = 125;
+
+enum menuStates { GAME_MODE = 1, SFX, FEELING_LUCKY, CREDITS,
+					MODE_1_PLAYER = 11, MODE_2_PLAYER,
+					SFX_ON = 21, SFX_OFF
+};
 
 #endif

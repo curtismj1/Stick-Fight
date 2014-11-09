@@ -26,6 +26,7 @@ StickFight::~StickFight()
 //=============================================================================
 void StickFight::initialize(HWND hwnd)
 {
+	activeMenu = false;
     Game::initialize(hwnd); // throws GameError
 	for (int i = 0; i < nTextures; i++){
 		if (!textures[i].initialize(graphics, images[i].c_str())) 
@@ -74,6 +75,47 @@ void StickFight::initialize(HWND hwnd)
 	two.setFrames(0, 3);
 	two.setScale(0.5);
 	two.setCollisionRadius((two.getHeight() - 30) / 2);
+
+	// Menu
+	activeMenu = false;
+	mainMenu = new Menu();
+	mainMenu->initialize(graphics, input, NULL);
+
+	mainMenu->setMenuHeading("Options");
+
+	std::vector<std::string> menuItems;
+	menuItems.push_back("New Game");	// Menu 1
+	menuItems.push_back("SoundFX");	// Menu 2
+	menuItems.push_back("I'm Feeling Lucky");
+	menuItems.push_back("Credits");
+	mainMenu->setMenuItems(menuItems);
+
+	std::vector<Menu*> children = mainMenu->getChildren();
+
+	// menu1
+	Menu* menu1 = new Menu();
+	menu1->initialize(graphics, input, mainMenu);
+	menuItems.resize(2);
+	menuItems[0] = "1 Player";	// Index 11
+	menuItems[1] = "2 Player";	// Index 12
+	children[0] = menu1;
+
+	menu1->setMenuItems(menuItems);
+	menu1->setMenuHeading("Characters");
+
+	// menu2
+	Menu* menu2 = new Menu();
+	menu2->initialize(graphics, input, mainMenu);
+	menuItems.resize(2);
+	menuItems[0] = "On";	// Index 21
+	menuItems[1] = "Off";	// Index 22
+	children[1] = menu2;
+
+	menu2->setMenuItems(menuItems);
+	menu2->setMenuHeading("Effects");
+	
+
+	mainMenu->setChildren(children);
 	
 }
 
@@ -82,24 +124,28 @@ void StickFight::initialize(HWND hwnd)
 //=============================================================================
 void StickFight::update()
 {
-	
-	one.readInput();
-	one.update(frameTime);
-	two.readInput();
-	two.update(frameTime);
-	if(!one.key_down_last_frame){
-		if(one.getCurrentFrame() <= 6 || one.getCurrentFrame() > 11){
-			one.setFrames(6,11);
+	if(activeMenu) {
+		mainMenu->getActiveMenu()->update();
+	} else {
+		one.readInput();
+		one.update(frameTime);
+		two.readInput();
+		two.update(frameTime);
+		if(!one.key_down_last_frame){
+			if(one.getCurrentFrame() <= 6 || one.getCurrentFrame() > 11){
+				one.setFrames(6,11);
+			}
+			if(one.getCurrentFrame() == 11){
+				one.setFrames(11,6);
+			}
+			int test = one.getCurrentFrame();
+			one.setFrameDelay(0.1f);
 		}
-		if(one.getCurrentFrame() == 11){
-			one.setFrames(11,6);
-		}
-		int test = one.getCurrentFrame();
-		one.setFrameDelay(0.1f);
+		one.key_down_last_frame = false;
+
+		for (int i = 0; i < nWalls; i++) walls[i].update(frameTime);
 	}
-	one.key_down_last_frame = false;
-	
-	for (int i = 0; i < nWalls; i++) walls[i].update(frameTime);
+	if(input->wasKeyPressed(VK_ESCAPE)) activeMenu = !activeMenu;
 }
 
 //=============================================================================
@@ -126,16 +172,22 @@ void StickFight::collisions()
 void StickFight::render()
 {
 	graphics->spriteBegin();
-	one.draw();
-	two.draw();
-	if (one.getHitbox() != 0) {
-		one.getHitbox()->draw();
-	}
-	if(two.getHitbox() != 0){
-		two.getHitbox()->draw();
-	}
+	if(activeMenu) {
+		mainMenu->getActiveMenu()->displayMenu(frameTime);
+	} else {	// All other cases
+		
+		one.draw();
+		two.draw();
+		if (one.getHitbox() != 0) {
+			one.getHitbox()->draw();
+		}
+		if(two.getHitbox() != 0){
+			two.getHitbox()->draw();
+		}
 
-	for (int i = 0; i < nWalls; i++) walls[i].draw();
+		for (int i = 0; i < nWalls; i++) walls[i].draw();
+		
+	}
 	graphics->spriteEnd();
 }
 

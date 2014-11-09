@@ -46,6 +46,8 @@ private:
 	Figure2 two;
 	Entity* walls;
 	int nWalls;
+	Menu* mainMenu;
+	bool activeMenu;
 };
 
 #endif

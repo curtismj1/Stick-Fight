@@ -16,6 +16,7 @@ class Game;
 #include "constants.h"
 #include "gameError.h"
 #include "audio.h"
+#include "menu.h"
 
 
 
