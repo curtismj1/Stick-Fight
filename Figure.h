@@ -11,12 +11,17 @@ public:
 	Entity* getHitbox() { if (isAttacking) return &hitbox; else return 0; }
 	bool initialize(Game *gamePtr, int width, int height, int ncols, TextureManager *textureM);
 	int getHealth() { return health; }
+	void damage(int d);
+	int getInvincible() { return invincible; }
 protected:
+	virtual void setCollisionBox();
+
 	bool onGround;
 	bool facingRight;
 	bool isAttacking;
 	bool isWalking;
 	Entity hitbox;
 	int health;
+	int invincible;
 };
 #endif

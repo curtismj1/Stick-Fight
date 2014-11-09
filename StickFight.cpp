@@ -1,7 +1,7 @@
 #include "StickFight.h"
 
-const std::string images[] = { "img/swordSheet.png", "img/figure.bmp", "img/wall.bmp", "img/sprite_sheet.png", "img/figure.bmp"};
-const int nTextures = 5;
+const std::string images[] = { "img/swordSheet.png", "img/figure.bmp", "img/wall.bmp", "img/sprite_sheet.png", "img/figure.bmp", "img/health.bmp"};
+const int nTextures = 6;
 
 //=============================================================================
 // Constructor
@@ -49,7 +49,8 @@ void StickFight::initialize(HWND hwnd)
 	if (!one.initialize(this, 180, 240, 6, &textures[3]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player one"));
 
-
+	if (!oneHealth.initialize(this, 0, 0, 0, &textures[5]))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player one health"));
 
 	if (!two.initialize(this, 256, 256, 4, &textures[0]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player two"));
@@ -66,6 +67,11 @@ void StickFight::initialize(HWND hwnd)
 	one.setCollisionRadius(one.getHeight()*one.getScaleX()-10/2);
 	one.setFrameDelay(.2f);
 	one.setFrames(6,11);
+
+	oneHealth.setX(0);
+	oneHealth.setY(0);
+	oneHealth.setScaleY(20);
+
 
 	two.setX(10);
 	two.setY(250);
@@ -124,13 +130,15 @@ void StickFight::update()
 	if(activeMenu) {
 		mainMenu->getActiveMenu()->update();
 	} else {
-		one.readInput();
+		//one.readInput();
 		one.update(frameTime);
 		two.readInput();
 		two.update(frameTime);
 		for (int i = 0; i < nWalls; i++) walls[i].update(frameTime);
 	}
 	if(input->wasKeyPressed(VK_ESCAPE)) activeMenu = !activeMenu;
+
+	oneHealth.setScaleX(one.getHealth() * 2);
 }
 
 //=============================================================================
@@ -151,14 +159,14 @@ void StickFight::collisions()
 
 	VECTOR2 cv;
 	Entity* hb = one.getHitbox();
-	if (hb != 0 && two.collidesWith(*hb, cv)) {
-		//kick back?
-		//deal damage
+	if (hb != 0 && two.collidesWith(*hb, cv) && two.getInvincible() == 0) {
+		//kick back
+		two.damage(10);
 	}
 	hb = two.getHitbox();
-	if (hb != 0 && one.collidesWith(*hb, cv)) {
+	if (hb != 0 && one.collidesWith(*hb, cv) && one.getInvincible() == 0) {
 		//kick back?
-		//deal damage
+		one.damage(10);
 	}
 }
 
@@ -171,10 +179,16 @@ void StickFight::render()
 	graphics->spriteBegin();
 	if(activeMenu) {
 		mainMenu->getActiveMenu()->displayMenu(frameTime);
-	} else {	// All other cases
+	} else {
 		
-		one.draw();
-		two.draw();
+		if (one.getInvincible() > 0)
+			one.draw(SETCOLOR_ARGB(100, 255, 255, 255));
+		else
+			one.draw();
+		if (one.getInvincible() > 0)
+			two.draw(SETCOLOR_ARGB(100, 255, 255, 255));
+		else
+			two.draw();
 		if (one.getHitbox() != 0) {
 			one.getHitbox()->draw();
 		}
@@ -183,6 +197,8 @@ void StickFight::render()
 		}
 
 		for (int i = 0; i < nWalls; i++) walls[i].draw();
+
+		oneHealth.draw();
 		
 	}
 	graphics->spriteEnd();

@@ -14,6 +14,8 @@ class StickFight;
 #include "image.h"
 #include "Figure.h"
 #include "textDX.h"
+#include "SwordGuy.h"
+#include "Boxer.h"
 #include <cmath>
 
 //=============================================================================
@@ -40,8 +42,13 @@ private:
 	TextureManager* textures;
 	TextDX text;
 	Image p1;
-	Figure one;
-	Figure two;
+
+	Boxer one;
+	Entity oneHealth;
+
+	SwordGuy two;
+	Entity twoHealth;
+
 	Entity* walls;
 	int nWalls;
 	Menu* mainMenu;

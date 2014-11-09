@@ -1,10 +1,10 @@
-#ifndef __SWORD_
-#define __SWORD_
+#ifndef __BOXER_
+#define __BOXER_
 #include "Figure.h"
 
-class SwordGuy : public Figure {
+class Boxer : public Figure {
 public:
-	SwordGuy();
+	Boxer();
 	void readInput();
 private:
 	void setCollisionBox();
