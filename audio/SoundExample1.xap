@@ -11,13 +11,13 @@ Options
 
 Global Settings
 {
-    Xbox File = Xbox\stick_fight.xgs;
-    Windows File = Win\stick_fight.xgs;
-    Header File = stick_fight.h;
+    Xbox File = Xbox\SoundExample1.xgs;
+    Windows File = Win\SoundExample1.xgs;
+    Header File = C:\Programming 2D Games\Object Version\Chapter 7 Sound\SoundExample1\audio\SoundExample1.h;
     Exclude Category Names = 0;
     Exclude Variable Names = 0;
-    Last Modified Low = 3349468431;
-    Last Modified High = 30407637;
+    Last Modified Low = 3180022128;
+    Last Modified High = 30138571;
 
     Category
     {
@@ -218,120 +218,151 @@ Global Settings
 
 Wave Bank
 {
-    Name = stick_wave_bank;
-    Xbox File = Xbox\stick_wave_bank.xwb;
-    Windows File = Win\stick_wave_bank.xwb;
+    Name = WavesExample1;
+    Xbox File = Xbox\WavesExample1.xwb;
+    Windows File = Win\WavesExample1.xwb;
     Xbox Bank Path Edited = 0;
     Windows Bank Path Edited = 0;
     Seek Tables = 1;
     Compression Preset Name = <none>;
-    Bank Last Revised Low = 2248868495;
-    Bank Last Revised High = 30407638;
+    Xbox Bank Last Modified Low = 0;
+    Xbox Bank Last Modified High = 0;
+    PC Bank Last Modified Low = 3180022128;
+    PC Bank Last Modified High = 30138571;
+    Bank Last Revised Low = 3180022128;
+    Bank Last Revised High = 30138571;
 
     Wave
     {
-        Name = punch_miss;
-        File = punch_miss.wav;
-        Build Settings Last Modified Low = 3107480901;
-        Build Settings Last Modified High = 30407637;
+        Name = beep1;
+        File = beep1.wav;
+        Build Settings Last Modified Low = 2740335722;
+        Build Settings Last Modified High = 30138568;
 
         Cache
         {
             Format Tag = 0;
-            Channels = 2;
-            Sampling Rate = 48000;
-            Bits Per Sample = 1;
-            Play Region Offset = 46;
-            Play Region Length = 97144;
+            Channels = 1;
+            Sampling Rate = 8000;
+            Bits Per Sample = 0;
+            Play Region Offset = 44;
+            Play Region Length = 1786;
             Loop Region Offset = 0;
             Loop Region Length = 0;
             File Type = 1;
-            Last Modified Low = 2448402151;
-            Last Modified High = 30407634;
+            Last Modified Low = 2920097662;
+            Last Modified High = 30138571;
         }
     }
 
     Wave
     {
-        Name = punch_hit;
-        File = punch_hit.wav;
-        Build Settings Last Modified Low = 3107480901;
-        Build Settings Last Modified High = 30407637;
+        Name = beep2;
+        File = beep2.wav;
+        Build Settings Last Modified Low = 2740491722;
+        Build Settings Last Modified High = 30138568;
 
         Cache
         {
             Format Tag = 0;
-            Channels = 2;
-            Sampling Rate = 48000;
-            Bits Per Sample = 1;
-            Play Region Offset = 46;
-            Play Region Length = 192744;
-            Loop Region Offset = 0;
-            Loop Region Length = 0;
-            File Type = 1;
-            Last Modified Low = 2361273143;
-            Last Modified High = 30407634;
-        }
-    }
-
-    Wave
-    {
-        Name = sword_miss;
-        File = sword_miss.wav;
-        Build Settings Last Modified Low = 2170956375;
-        Build Settings Last Modified High = 30407638;
-
-        Cache
-        {
-            Format Tag = 0;
-            Channels = 2;
+            Channels = 1;
             Sampling Rate = 11025;
             Bits Per Sample = 1;
             Play Region Offset = 44;
-            Play Region Length = 8532;
+            Play Region Length = 11424;
             Loop Region Offset = 0;
             Loop Region Length = 0;
             File Type = 1;
-            Last Modified Low = 1803672057;
-            Last Modified High = 30407638;
+            Last Modified Low = 594390174;
+            Last Modified High = 30138570;
         }
     }
 
     Wave
     {
-        Name = sword_hit;
-        File = sword_hit.wav;
-        Build Settings Last Modified Low = 2170956375;
-        Build Settings Last Modified High = 30407638;
+        Name = beep3;
+        File = beep3.wav;
+        Build Settings Last Modified Low = 2740491722;
+        Build Settings Last Modified High = 30138568;
 
         Cache
         {
             Format Tag = 0;
-            Channels = 2;
-            Sampling Rate = 44100;
+            Channels = 1;
+            Sampling Rate = 11025;
             Bits Per Sample = 1;
             Play Region Offset = 44;
-            Play Region Length = 97384;
+            Play Region Length = 20736;
             Loop Region Offset = 0;
             Loop Region Length = 0;
             File Type = 1;
-            Last Modified Low = 1823865482;
-            Last Modified High = 30407638;
+            Last Modified Low = 1370597106;
+            Last Modified High = 30138446;
+        }
+    }
+
+    Wave
+    {
+        Name = beep4;
+        File = beep4.wav;
+        Build Settings Last Modified Low = 2740491722;
+        Build Settings Last Modified High = 30138568;
+
+        Cache
+        {
+            Format Tag = 0;
+            Channels = 1;
+            Sampling Rate = 11025;
+            Bits Per Sample = 1;
+            Play Region Offset = 44;
+            Play Region Length = 18432;
+            Loop Region Offset = 0;
+            Loop Region Length = 0;
+            File Type = 1;
+            Last Modified Low = 1949082125;
+            Last Modified High = 30138446;
+        }
+    }
+
+    Wave
+    {
+        Name = hit;
+        File = hit.wav;
+        Build Settings Last Modified Low = 2740491722;
+        Build Settings Last Modified High = 30138568;
+
+        Cache
+        {
+            Format Tag = 0;
+            Channels = 1;
+            Sampling Rate = 11025;
+            Bits Per Sample = 1;
+            Play Region Offset = 44;
+            Play Region Length = 13824;
+            Loop Region Offset = 0;
+            Loop Region Length = 0;
+            File Type = 1;
+            Last Modified Low = 2303158751;
+            Last Modified High = 30138446;
         }
     }
 }
 
 Sound Bank
 {
-    Name = stick_sound_bank;
-    Xbox File = Xbox\stick_sound_bank.xsb;
-    Windows File = Win\stick_sound_bank.xsb;
+    Name = SoundsExample1;
+    Xbox File = Xbox\SoundsExample1.xsb;
+    Windows File = Win\SoundsExample1.xsb;
     Xbox Bank Path Edited = 0;
     Windows Bank Path Edited = 0;
+    Bank Last Modified Low = 3180178128;
+    Bank Last Modified High = 30138571;
+    Header Last Modified High = 0;
+    Header Last Modified Low = 0;
 
     Sound
     {
-        Name = punch_miss;
+        Name = beep1;
         Volume = -1200;
         Pitch = 0;
         Priority = 0;
@@ -365,9 +396,9 @@ Sound Bank
 
                 Wave Entry
                 {
-                    Bank Name = stick_wave_bank;
+                    Bank Name = WavesExample1;
                     Bank Index = 0;
-                    Entry Name = punch_miss;
+                    Entry Name = beep1;
                     Entry Index = 0;
                     Weight = 255;
                     Weight Min = 0;
@@ -378,7 +409,7 @@ Sound Bank
 
     Sound
     {
-        Name = punch_hit;
+        Name = beep2;
         Volume = -1200;
         Pitch = 0;
         Priority = 0;
@@ -412,9 +443,9 @@ Sound Bank
 
                 Wave Entry
                 {
-                    Bank Name = stick_wave_bank;
+                    Bank Name = WavesExample1;
                     Bank Index = 0;
-                    Entry Name = punch_hit;
+                    Entry Name = beep2;
                     Entry Index = 1;
                     Weight = 255;
                     Weight Min = 0;
@@ -425,7 +456,7 @@ Sound Bank
 
     Sound
     {
-        Name = sword_miss;
+        Name = beep3;
         Volume = -1200;
         Pitch = 0;
         Priority = 0;
@@ -459,9 +490,9 @@ Sound Bank
 
                 Wave Entry
                 {
-                    Bank Name = stick_wave_bank;
+                    Bank Name = WavesExample1;
                     Bank Index = 0;
-                    Entry Name = sword_miss;
+                    Entry Name = beep3;
                     Entry Index = 2;
                     Weight = 255;
                     Weight Min = 0;
@@ -472,7 +503,7 @@ Sound Bank
 
     Sound
     {
-        Name = sword_hit;
+        Name = beep4;
         Volume = -1200;
         Pitch = 0;
         Priority = 0;
@@ -506,10 +537,57 @@ Sound Bank
 
                 Wave Entry
                 {
-                    Bank Name = stick_wave_bank;
+                    Bank Name = WavesExample1;
                     Bank Index = 0;
-                    Entry Name = sword_hit;
+                    Entry Name = beep4;
                     Entry Index = 3;
+                    Weight = 255;
+                    Weight Min = 0;
+                }
+            }
+        }
+    }
+
+    Sound
+    {
+        Name = hit;
+        Volume = -1200;
+        Pitch = 0;
+        Priority = 0;
+
+        Category Entry
+        {
+            Name = Default;
+        }
+
+        Track
+        {
+            Volume = 0;
+            Use Filter = 0;
+
+            Play Wave Event
+            {
+                Break Loop = 0;
+                Use Speaker Position = 0;
+                Use Center Speaker = 1;
+                New Speaker Position On Loop = 1;
+                Speaker Position Angle = 0.000000;
+                Speaker Position Arc = 0.000000;
+
+                Event Header
+                {
+                    Timestamp = 0;
+                    Relative = 0;
+                    Random Recurrence = 0;
+                    Random Offset = 0;
+                }
+
+                Wave Entry
+                {
+                    Bank Name = WavesExample1;
+                    Bank Index = 0;
+                    Entry Name = hit;
+                    Entry Index = 4;
                     Weight = 255;
                     Weight Min = 0;
                 }
@@ -519,7 +597,7 @@ Sound Bank
 
     Cue
     {
-        Name = punch_miss;
+        Name = beep1;
 
         Variation
         {
@@ -530,7 +608,7 @@ Sound Bank
 
         Sound Entry
         {
-            Name = punch_miss;
+            Name = beep1;
             Index = 0;
             Weight Min = 0;
             Weight Max = 255;
@@ -539,7 +617,7 @@ Sound Bank
 
     Cue
     {
-        Name = punch_hit;
+        Name = beep2;
 
         Variation
         {
@@ -550,7 +628,7 @@ Sound Bank
 
         Sound Entry
         {
-            Name = punch_hit;
+            Name = beep2;
             Index = 1;
             Weight Min = 0;
             Weight Max = 255;
@@ -559,7 +637,7 @@ Sound Bank
 
     Cue
     {
-        Name = sword_miss;
+        Name = beep3;
 
         Variation
         {
@@ -570,7 +648,7 @@ Sound Bank
 
         Sound Entry
         {
-            Name = sword_miss;
+            Name = beep3;
             Index = 2;
             Weight Min = 0;
             Weight Max = 255;
@@ -579,7 +657,7 @@ Sound Bank
 
     Cue
     {
-        Name = sword_hit;
+        Name = beep4;
 
         Variation
         {
@@ -590,8 +668,28 @@ Sound Bank
 
         Sound Entry
         {
-            Name = sword_hit;
+            Name = beep4;
             Index = 3;
+            Weight Min = 0;
+            Weight Max = 255;
+        }
+    }
+
+    Cue
+    {
+        Name = hit;
+
+        Variation
+        {
+            Variation Type = 3;
+            Variation Table Type = 1;
+            New Variation on Loop = 0;
+        }
+
+        Sound Entry
+        {
+            Name = hit;
+            Index = 4;
             Weight Min = 0;
             Weight Max = 255;
         }
