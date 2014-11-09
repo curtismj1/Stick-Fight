@@ -35,11 +35,11 @@ void Figure2::readInput() {
 	if (input->isKeyDown(VK_SPACE)) {
 		isAttacking = true;
 		if (facingRight) {
-			hitbox.setX(spriteData.x + spriteData.width * spriteData.scale);
-			hitbox.setY(spriteData.y + spriteData.height * spriteData.scale / 2);
+			hitbox.setX(spriteData.x + spriteData.width * spriteData.scaleX);
+			hitbox.setY(spriteData.y + spriteData.height * spriteData.scaleY / 2);
 		} else {
-			hitbox.setX(spriteData.x - hitbox.getWidth() * hitbox.getScale());
-			hitbox.setY(spriteData.y + spriteData.height * spriteData.scale / 2);
+			hitbox.setX(spriteData.x - hitbox.getWidth() * hitbox.getScaleX());
+			hitbox.setY(spriteData.y + spriteData.height * spriteData.scaleY / 2);
 		}
 
 	} else isAttacking = false;
