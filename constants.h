@@ -111,6 +111,8 @@ const UCHAR PADDLE_DOWN = VK_DOWN;
 
 //
 
+
+
 // audio files required by audio.cpp
 // WAVE_BANK must be location of .xwb file.
 const char WAVE_BANK[]  = "audio\\Win\\WavesExample1.xwb";

@@ -1,58 +1,38 @@
-#include "Figure.h"
+#include "Figure2.h"
 #include "StickFight.h"
 
 const float maxHorizontalSpeed = 2.0;
 
-
-namespace playerNS{
-	float ANIMATION_DELAY = 0.2f;
-
-}
-
-
-Figure::Figure() {
+Figure2::Figure2() {
 	collisionType = entityNS::CIRCLE;
-	lastFrame = 0;
 	onGround = false;
 	facingRight = true;
-	key_down_last_frame = false;
 }
-int Figure::getLastFrame(){
-	return lastFrame;
-}
-bool Figure::initialize(Game *gamePtr, int width, int height, int ncols, TextureManager *textureM) {
-	hitbox.initialize(gamePtr, width, height, ncols, textureM);
+
+bool Figure2::initialize(Game *gamePtr, int width, int height, int ncols, TextureManager *textureM) {
+	hitbox.initialize(gamePtr, 0, 0, 0, textureM + 1);
 	hitbox.setScale(10);
 	return Entity::initialize(gamePtr, width, height, ncols, textureM);
 }
 
-void Figure::readInput() {
-	
-	flipHorizontal(!facingRight);
-	if (input->isKeyDown(VK_LEFT) && velocity.x > -maxHorizontalSpeed) {
+void Figure2::readInput() {
+	isWalking = false;
+	if (GetAsyncKeyState('A') && velocity.x > -maxHorizontalSpeed) {
 		velocity.x += -0.2;
 		facingRight = false;
-		setFrames(0,5);
-		setFrameDelay(0.05f);
-		key_down_last_frame = true;
-		
+		isWalking = true;
 	}
-	if (input->isKeyDown(VK_RIGHT) && velocity.x < maxHorizontalSpeed) {
+	if (GetAsyncKeyState('D') && velocity.x < maxHorizontalSpeed) {
 		velocity.x += 0.2;
 		facingRight = true;
-		setFrames(0,5);
-		setFrameDelay(0.05f);
-		flipHorizontal(!facingRight);
-		key_down_last_frame = true;
+		isWalking = true;
 	}
-	if (input->isKeyDown(VK_UP) && onGround) {
+	if (GetAsyncKeyState('W') && onGround) {
 		velocity.y = -5;
 		onGround = false;
-		key_down_last_frame = true;
 	}
 
 	if (input->isKeyDown(VK_SPACE)) {
-		key_down_last_frame = true;
 		isAttacking = true;
 		if (facingRight) {
 			hitbox.setX(spriteData.x + spriteData.width * spriteData.scale);
@@ -62,12 +42,24 @@ void Figure::readInput() {
 			hitbox.setY(spriteData.y + spriteData.height * spriteData.scale / 2);
 		}
 
-	} else{
-		isAttacking = false;
+	} else isAttacking = false;
+
+	if (isWalking) {
+		setFrameDelay(0.1);
+		if (facingRight)
+			setFrames(4, 7);
+		else
+			setFrames(12, 15);
+	} else {
+		setFrameDelay(0.5);
+		if (facingRight)
+			setFrames(0, 3);
+		else
+			setFrames(8, 11);
 	}
 }
 
-void Figure::update(float frameTime) {
+void Figure2::update(float frameTime) {
 	if (!onGround) deltaV.y = 0.1;
 
 	if (velocity.x > 0) deltaV.x = -0.1;
@@ -77,10 +69,9 @@ void Figure::update(float frameTime) {
 
 	spriteData.x += velocity.x;
 	spriteData.y += velocity.y;
-	
 }
 
-void Figure::collisions(Entity* walls, int nWalls) {
+void Figure2::collisions(Entity* walls, int nWalls) {
 	VECTOR2 collisionVector;
 	onGround = false;
 	for(int i = 0; i < nWalls; i++)
