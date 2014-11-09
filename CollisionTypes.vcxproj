@@ -88,6 +88,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="audio.cpp" />
+    <ClCompile Include="Boxer.cpp" />
     <ClCompile Include="Figure.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="StickFight.cpp" />
@@ -96,12 +97,14 @@
     <ClCompile Include="graphics.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="input.cpp" />
+    <ClCompile Include="SwordGuy.cpp" />
     <ClCompile Include="textDX.cpp" />
     <ClCompile Include="textureManager.cpp" />
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio.h" />
+    <ClInclude Include="Boxer.h" />
     <ClInclude Include="Figure.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="StickFight.h" />

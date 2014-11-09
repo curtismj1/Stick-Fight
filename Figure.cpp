@@ -7,13 +7,30 @@ Figure::Figure() {
 	collisionType = entityNS::BOX;
 	onGround = false;
 	facingRight = true;
+	health = 100;
+	invincible = 0;
+}
+
+void Figure::damage(int d) {
+	health -= d; 
+	if (health < 0) 
+		health = 0;
+	invincible = 10;
 }
 
 bool Figure::initialize(Game *gamePtr, int width, int height, int ncols, TextureManager *textureM) {
 	hitbox.initialize(gamePtr, 0, 0, 0, textureM + 1);
 	hitbox.setScale(10);
 	bool r = Entity::initialize(gamePtr, width, height, ncols, textureM);
+	setCollisionBox();
 	return r;
+}
+
+void Figure::setCollisionBox() {
+	edge.left = -getWidth() / 2;
+	edge.right = getWidth() / 2;
+	edge.top = -getHeight() / 2;
+	edge.bottom = getHeight() / 2;
 }
 
 void Figure::readInput() {
@@ -44,20 +61,6 @@ void Figure::readInput() {
 		}
 
 	} else isAttacking = false;
-
-	if (isWalking) {
-		setFrameDelay(0.1);
-		if (facingRight)
-			setFrames(4, 7);
-		else
-			setFrames(12, 15);
-	} else {
-		setFrameDelay(0.5);
-		if (facingRight)
-			setFrames(0, 3);
-		else
-			setFrames(8, 11);
-	}
 }
 
 void Figure::update(float frameTime) {
@@ -70,6 +73,8 @@ void Figure::update(float frameTime) {
 
 	spriteData.x += velocity.x;
 	spriteData.y += velocity.y;
+
+	if (invincible > 0) invincible--;
 }
 
 void Figure::collisions(Entity* walls, int nWalls) {
