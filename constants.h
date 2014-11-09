@@ -124,9 +124,11 @@ const char HIT[]   = "hit";
 // Pattern Step Action
 enum PATTERN_STEP_ACTION {NONE, UP, DOWN, LEFT, RIGHT, TRACK, EVADE, UPLEFT};
 
+// Game states
+enum GameStates {SPLASH_SCREEN, MENU, LEVEL1, END};
+
 // Menu Constants
 const int MENU_OFFSET = 125;
-
 enum menuStates { GAME_MODE = 1, SFX, FEELING_LUCKY, CREDITS,
 					MODE_1_PLAYER = 11, MODE_2_PLAYER,
 					SFX_ON = 21, SFX_OFF

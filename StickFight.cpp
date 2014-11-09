@@ -27,6 +27,8 @@ StickFight::~StickFight()
 void StickFight::initialize(HWND hwnd)
 {
 	activeMenu = false;
+	timeInState = 0.0;
+	gameStates = SPLASH_SCREEN;
     Game::initialize(hwnd); // throws GameError
 	for (int i = 0; i < nTextures; i++){
 		if (!textures[i].initialize(graphics, images[i].c_str())) 
@@ -121,8 +123,10 @@ void StickFight::initialize(HWND hwnd)
 //=============================================================================
 void StickFight::update()
 {
-	if(activeMenu) {
+	gameStateUpdate();
+	if(activeMenu || gameStates == MENU) {
 		mainMenu->getActiveMenu()->update();
+		// Handle an action
 	} else {
 		one.readInput();
 		one.update(frameTime);
@@ -172,17 +176,31 @@ void StickFight::render()
 	if(activeMenu) {
 		mainMenu->getActiveMenu()->displayMenu(frameTime);
 	} else {	// All other cases
-		
-		one.draw();
-		two.draw();
-		if (one.getHitbox() != 0) {
-			one.getHitbox()->draw();
-		}
-		if(two.getHitbox() != 0){
-			two.getHitbox()->draw();
-		}
+		switch(gameStates) {
+		case SPLASH_SCREEN:
+			// Render splash screen
+			break;
+		case MENU:
+			// Render menu
+			mainMenu->getActiveMenu()->displayMenu(frameTime);
+			break;
+		case LEVEL1:
+			one.draw();
+			two.draw();
+			if (one.getHitbox() != 0) {
+				one.getHitbox()->draw();
+			}
+			if(two.getHitbox() != 0){
+				two.getHitbox()->draw();
+			}
 
-		for (int i = 0; i < nWalls; i++) walls[i].draw();
+			for (int i = 0; i < nWalls; i++) walls[i].draw();
+			
+			break;
+		case END:
+			// You won or lost
+			break;
+		}
 		
 	}
 	graphics->spriteEnd();
@@ -204,4 +222,34 @@ void StickFight::releaseAll()
 void StickFight::resetAll()
 {
     Game::resetAll();
+}
+
+//=============================================================================
+// Update all game items
+//=============================================================================
+
+void StickFight::gameStateUpdate()
+{
+	timeInState += frameTime;
+	if (gameStates==SPLASH_SCREEN && input->anyKeyPressed())
+	{
+		gameStates = MENU;
+		timeInState = 0;
+	}
+	if (gameStates==MENU) {
+		if(mainMenu->getMenuState() == MODE_1_PLAYER) {
+			gameStates = LEVEL1;
+			timeInState = 0;
+		}
+	}
+	if (gameStates==LEVEL1)
+	{
+		timeInState = 0;
+	}
+
+	if (gameStates==END)
+	{
+		PostQuitMessage(0);
+		timeInState = 0;
+	}
 }
