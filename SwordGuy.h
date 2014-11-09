@@ -5,7 +5,7 @@
 class SwordGuy : public Figure {
 public:
 	SwordGuy();
-	void readInput();
+	void animate();
 private:
 	void setCollisionBox();
 };

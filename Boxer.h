@@ -5,7 +5,7 @@
 class Boxer : public Figure {
 public:
 	Boxer();
-	void readInput();
+	void animate();
 private:
 	void setCollisionBox();
 };

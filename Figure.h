@@ -13,12 +13,15 @@ public:
 	int getHealth() { return health; }
 	void damage(int d);
 	int getInvincible() { return invincible; }
+	void Ai(Figure*);
+	virtual void animate() = 0;
 protected:
 	virtual void setCollisionBox();
 
 	bool onGround;
 	bool facingRight;
 	bool isAttacking;
+	bool isBlocking;
 	bool isWalking;
 	Entity hitbox;
 	int health;
