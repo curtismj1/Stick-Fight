@@ -2,7 +2,7 @@
 #include "StickFight.h"
 
 const float maxHorizontalSpeed = 1.0;
-const float maxAIHorizontalSpeed = 0.5;
+const float maxAIHorizontalSpeed = .75;
 
 Figure::Figure() {
 	collisionType = entityNS::BOX;
@@ -67,7 +67,6 @@ void Figure::readInput() {
 
 void Figure::update(float frameTime) {
 	if (!onGround) deltaV.y = 0.1;
-
 	if (velocity.x > 0) deltaV.x = -0.1;
 	if (velocity.x < 0) deltaV.x = 0.1;
 	if (velocity.x < 0.1 && velocity.x > -0.1) deltaV.x = -velocity.x;
@@ -91,15 +90,30 @@ void Figure::collisions(Entity* walls, int nWalls) {
 
 void Figure::Ai(Figure* enemy) {
 	if (enemy->getX() > getX()) {
-		if (velocity.x < maxAIHorizontalSpeed)
-			velocity.x += 0.2;
+		if(enemy->getX() > getX() + 50){
+			if (velocity.x < maxAIHorizontalSpeed){
+				velocity.x += 0.2;
+			}
+			
+			isWalking = false;
+		}
+		else{
+			isWalking = true;
+		}
 		facingRight = true;
-		isWalking = true;
-	} else {
-		if (velocity.x > -maxAIHorizontalSpeed)
-			velocity.x += -0.2;
+	} else if(enemy->getX() < getX()){
+		if(enemy->getX() < getX() -50){
+			if (velocity.x > -maxAIHorizontalSpeed){
+				velocity.x += -0.2;
+			}
+			isWalking = false;
+			
+		}
+		else{
+			isWalking = true;
+		}
 		facingRight = false;
-		isWalking = true;
 	}
 	animate();
+
 }

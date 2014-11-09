@@ -26,5 +26,6 @@ protected:
 	Entity hitbox;
 	int health;
 	int invincible;
+	
 };
 #endif
