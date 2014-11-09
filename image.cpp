@@ -129,26 +129,45 @@ void Image::draw(SpriteData sd, COLOR_ARGB color)
 //=============================================================================
 void Image::update(float frameTime)
 {
-    if (endFrame - startFrame > 0)          // if animated sprite
-    {
-        animTimer += frameTime;             // total elapsed time
-        if (animTimer > frameDelay)
-        {
-            animTimer -= frameDelay;
-            currentFrame++;
-            if (currentFrame < startFrame || currentFrame > endFrame)
-            {
-                if(loop == true)            // if looping animation
-                    currentFrame = startFrame;
-                else                        // not looping animation
-                {
-                    currentFrame = endFrame;
-                    animComplete = true;    // animation complete
-                }
-            }
-            setRect();                      // set spriteData.rect
-        }
-    }
+	bool animateForward = endFrame-startFrame>0;
+	if (endFrame - startFrame != 0) // if animated sprite
+	{
+		animTimer += frameTime; // total elapsed time
+		if (animTimer > frameDelay)
+		{
+			animTimer -= frameDelay;
+			// Animate forward or backward
+			if(animateForward)
+				currentFrame++;
+			else
+				currentFrame--;
+			if(animateForward)
+			{
+				if (currentFrame < startFrame || currentFrame > endFrame)
+				{
+					if(loop == true) // if looping animation
+						currentFrame = startFrame;
+					else // not looping animation
+					{
+						currentFrame = endFrame;
+						animComplete = true; // animation complete
+					}
+				}
+			} else {
+				if (currentFrame > startFrame || currentFrame < endFrame)
+				{
+					if(loop == true) // if looping animation
+						currentFrame = startFrame;
+					else // not looping animation
+					{
+						currentFrame = endFrame;
+						animComplete = true; // animation complete
+					}
+				}
+			}
+			setRect(); // set spriteData.rect
+		}
+	}
 }
 
 //=============================================================================

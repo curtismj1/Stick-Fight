@@ -32,6 +32,9 @@ void StickFight::initialize(HWND hwnd)
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing texture"));
 
 	}
+	if (!playerTexture.initialize(graphics,SPRITE_SHEET))
+        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player texture"));
+
 
 	for (int i = 0; i < nWalls; i++) {
 		if (!walls[i].initialize(this, 40, 2, 0, &textures[2]))
@@ -45,20 +48,33 @@ void StickFight::initialize(HWND hwnd)
 		walls[i].setEdge(r);
 	}
 
-	if (!one.initialize(this, 256, 256, 4, &textures[0]))
+	if (!one.initialize(this, 180, 240, 6, &playerTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player one"));
+
+
+
+	if (!two.initialize(this, 256, 256, 4, &textures[0]))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player two"));
 
 	text.initialize(graphics, 12, false, false, "Cambria");
 
 	walls[0].setX(50);
 	walls[0].setY(400);
 	walls[0].setScale(13);
+	
+	one.setX(100);
+	one.setY(300);
+	one.setScale(.5);
+	one.setCollisionRadius(one.getHeight()*one.getScale()-10/2);
+	one.setFrameDelay(.2f);
+	one.setFrames(6,11);
 
-	one.setX(10);
-	one.setY(250);
-	one.setFrames(0, 3);
-	one.setScale(0.4);
-	one.setCollisionRadius((one.getHeight() - 30) / 2);
+	two.setX(10);
+	two.setY(250);
+	two.setFrames(0, 3);
+	two.setScale(0.5);
+	two.setCollisionRadius((two.getHeight() - 30) / 2);
+	
 }
 
 //=============================================================================
@@ -66,8 +82,23 @@ void StickFight::initialize(HWND hwnd)
 //=============================================================================
 void StickFight::update()
 {
+	
 	one.readInput();
 	one.update(frameTime);
+	two.readInput();
+	two.update(frameTime);
+	if(!one.key_down_last_frame){
+		if(one.getCurrentFrame() <= 6 || one.getCurrentFrame() > 11){
+			one.setFrames(6,11);
+		}
+		if(one.getCurrentFrame() == 11){
+			one.setFrames(11,6);
+		}
+		int test = one.getCurrentFrame();
+		one.setFrameDelay(0.1f);
+	}
+	one.key_down_last_frame = false;
+	
 	for (int i = 0; i < nWalls; i++) walls[i].update(frameTime);
 }
 
@@ -85,6 +116,7 @@ void StickFight::ai()
 void StickFight::collisions()
 {
 	one.collisions(walls, nWalls);
+	two.collisions(walls, nWalls);
 }
 
 #include <string>
@@ -95,9 +127,14 @@ void StickFight::render()
 {
 	graphics->spriteBegin();
 	one.draw();
+	two.draw();
 	if (one.getHitbox() != 0) {
 		one.getHitbox()->draw();
 	}
+	if(two.getHitbox() != 0){
+		two.getHitbox()->draw();
+	}
+
 	for (int i = 0; i < nWalls; i++) walls[i].draw();
 	graphics->spriteEnd();
 }

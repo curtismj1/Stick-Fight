@@ -89,6 +89,7 @@
   <ItemGroup>
     <ClCompile Include="audio.cpp" />
     <ClCompile Include="Figure.cpp" />
+    <ClCompile Include="Figure2.cpp" />
     <ClCompile Include="StickFight.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="game.cpp" />
@@ -102,6 +103,7 @@
   <ItemGroup>
     <ClInclude Include="audio.h" />
     <ClInclude Include="Figure.h" />
+    <ClInclude Include="Figure2.h" />
     <ClInclude Include="StickFight.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="entity.h" />

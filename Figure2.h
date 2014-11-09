@@ -1,23 +1,21 @@
-#ifndef __FIGURE_H_
-#define __FIGURE_H_
+#ifndef __FIGURE2_H_
+#define __FIGURE2_H_
 
 #include "entity.h"
-class Figure : public Entity {
+class Figure2 : public Entity {
 public:
-	Figure();
+	Figure2();
 	void readInput();
 	void update(float);
 	void collisions(Entity* walls, int nWalls);
 	Entity* getHitbox() { if (isAttacking) return &hitbox; else return 0; }
 	bool initialize(Game *gamePtr, int width, int height, int ncols, TextureManager *textureM);
-	bool key_down_last_frame;
-	int getLastFrame();
 private:
 	bool onGround;
+
 	bool facingRight;
 	bool isAttacking;
-	int lastFrame;
-	
+	bool isWalking;
 	Entity hitbox;
 };
 #endif
