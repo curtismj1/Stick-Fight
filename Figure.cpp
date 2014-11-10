@@ -91,6 +91,11 @@ void Figure::collisions(Entity* walls, int nWalls) {
 			velocity.y = 0;
 			onGround = true;
 		}
+
+	if (getX() < 0) {
+		velocity.x *= -1;
+		spriteData.x = 0;
+	}
 }
 
 void Figure::Ai(Figure* enemy) {
@@ -100,28 +105,34 @@ void Figure::Ai(Figure* enemy) {
 	}
 	isWalking = false;
 	if (enemy->getX() > getX()) {
-		if(enemy->getX() > getX() + 50){
+		if(abs(enemy->getX() - getX()) < 200) {
+			if (abs(enemy->getX() - getX()) > 190)
+				return;
+			if (velocity.x > -maxAIHorizontalSpeed / 2){
+				velocity.x += -0.2;
+				return;
+			}
+		} else {
 			if (velocity.x < maxAIHorizontalSpeed){
 				velocity.x += 0.2;
 			}
-			
-			isWalking = false;
 		}
-		else{
-			isWalking = true;
-		}
+		isWalking = true;
 		facingRight = true;
 	} else if(enemy->getX() < getX()){
-		if(enemy->getX() < getX() -50){
+		if(abs(enemy->getX() - getX()) > 200) {
+			if (abs(enemy->getX() - getX()) < 190)
+				return;
+			if (velocity.x < maxAIHorizontalSpeed / 2){
+				velocity.x += 0.2;
+				return;
+			}
+		} else {
 			if (velocity.x > -maxAIHorizontalSpeed){
 				velocity.x += -0.2;
 			}
-			isWalking = false;
-			
 		}
-		else{
-			isWalking = true;
-		}
+		isWalking = true;
 		facingRight = false;
 	}
 }
