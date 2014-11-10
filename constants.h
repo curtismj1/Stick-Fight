@@ -8,6 +8,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <windows.h>
+#include <string>
 
 //=============================================================================
 // Function templates for safely dealing with pointer referenced items.
@@ -106,6 +107,16 @@ const UCHAR PADDLE_DOWN = VK_DOWN;
 
 //
 
+// Assets
+const std::string images[] = { "img/swordSheet.png",
+	"img/figure.bmp",
+	"img/wall.bmp",
+	"img/sprite_sheet.png",
+	"img/figure.bmp",
+	"img/health.bmp",
+	"img/splash.png"
+};
+const int nTextures = 7;
 
 
 // audio files required by audio.cpp
@@ -124,9 +135,11 @@ const char HIT[]   = "hit";
 // Pattern Step Action
 enum PATTERN_STEP_ACTION {NONE, UP, DOWN, LEFT, RIGHT, TRACK, EVADE, UPLEFT};
 
+// Game states
+enum GameStates {SPLASH_SCREEN, MENU, LEVEL1, END};
+
 // Menu Constants
 const int MENU_OFFSET = 125;
-
 enum menuStates { GAME_MODE = 1, SFX, FEELING_LUCKY, CREDITS,
 					MODE_1_PLAYER = 11, MODE_2_PLAYER,
 					SFX_ON = 21, SFX_OFF

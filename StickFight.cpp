@@ -1,8 +1,5 @@
 #include "StickFight.h"
 
-const std::string images[] = { "img/swordSheet.png", "img/figure.bmp", "img/wall.bmp", "img/sprite_sheet.png", "img/figure.bmp", "img/health.bmp"};
-const int nTextures = 6;
-
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -27,12 +24,17 @@ StickFight::~StickFight()
 void StickFight::initialize(HWND hwnd)
 {
 	activeMenu = false;
+	timeInState = 0.0;
+	gameStates = SPLASH_SCREEN;
     Game::initialize(hwnd); // throws GameError
 	for (int i = 0; i < nTextures; i++){
 		if (!textures[i].initialize(graphics, images[i].c_str())) 
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing texture"));
 
 	}
+
+	if (!splashScreen.initialize(graphics, GAME_WIDTH, GAME_HEIGHT, 0, &textures[6]))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing splash screen"));
 
 	for (int i = 0; i < nWalls; i++) {
 		if (!walls[i].initialize(this, 40, 2, 0, &textures[2]))
@@ -46,7 +48,7 @@ void StickFight::initialize(HWND hwnd)
 		walls[i].setEdge(r);
 	}
 
-	if (!one.initialize(this, 180, 240, 6, &textures[3]))
+	if (!one.initialize(this, 180, 260, 6, &textures[3]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player one"));
 
 	if (!oneHealth.initialize(this, 0, 0, 0, &textures[5]))
@@ -55,7 +57,8 @@ void StickFight::initialize(HWND hwnd)
 	if (!two.initialize(this, 256, 256, 4, &textures[0]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player two"));
 
-	text.initialize(graphics, 12, false, false, "Cambria");
+	text.initialize(graphics, 30, false, false, "Cambria");
+	text.setFontColor(graphicsNS::RED);
 
 	walls[0].setX(50);
 	walls[0].setY(400);
@@ -127,8 +130,10 @@ void StickFight::initialize(HWND hwnd)
 //=============================================================================
 void StickFight::update()
 {
-	if(activeMenu) {
+	gameStateUpdate();
+	if(activeMenu || gameStates == MENU) {
 		mainMenu->getActiveMenu()->update();
+		// Handle an action
 	} else {
 		//one.readInput();
 		one.update(frameTime);
@@ -147,6 +152,7 @@ void StickFight::update()
 void StickFight::ai()
 {
 	one.Ai(&two);
+	
 }
 
 //=============================================================================
@@ -178,7 +184,6 @@ void StickFight::collisions()
 	}
 }
 
-#include <string>
 //=============================================================================
 // Render game items
 //=============================================================================
@@ -187,26 +192,48 @@ void StickFight::render()
 	graphics->spriteBegin();
 	if(activeMenu) {
 		mainMenu->getActiveMenu()->displayMenu(frameTime);
-	} else {
-		
-		if (one.getInvincible() > 0)
-			one.draw(SETCOLOR_ARGB(100, 255, 255, 255));
-		else
-			one.draw();
-		if (one.getInvincible() > 0)
-			two.draw(SETCOLOR_ARGB(100, 255, 255, 255));
-		else
-			two.draw();
-		if (one.getHitbox() != 0) {
-			one.getHitbox()->draw();
-		}
-		if(two.getHitbox() != 0){
-			two.getHitbox()->draw();
+	} else {	// All other cases
+		switch(gameStates) {
+		case SPLASH_SCREEN:
+			splashScreen.draw();
+			if(timeInState<.75) {
+				text.print("PRESS SPACE TO CONTINUE",GAME_WIDTH/2-160,GAME_HEIGHT-40);
+			} else if(timeInState>1.5) {
+				timeInState = 0.0;
+			}
+
+			// Render splash screen
+			break;
+		case MENU:
+			// Render menu
+			mainMenu->getActiveMenu()->displayMenu(frameTime);
+			break;
+		case LEVEL1:
+			if (one.getInvincible() > 0)
+				one.draw(SETCOLOR_ARGB(100, 255, 255, 255));
+			else
+				one.draw();
+			if (one.getInvincible() > 0)
+				two.draw(SETCOLOR_ARGB(100, 255, 255, 255));
+			else
+				two.draw();
+			if (one.getHitbox() != 0) {
+				one.getHitbox()->draw();
+			}
+			if(two.getHitbox() != 0){
+				two.getHitbox()->draw();
+			}
+	
+			for (int i = 0; i < nWalls; i++) walls[i].draw();
+	
+			oneHealth.draw();
+			
+			break;
+		case END:
+			// You won or lost
+			break;
 		}
 
-		for (int i = 0; i < nWalls; i++) walls[i].draw();
-
-		oneHealth.draw();
 		
 	}
 	graphics->spriteEnd();
@@ -228,4 +255,34 @@ void StickFight::releaseAll()
 void StickFight::resetAll()
 {
     Game::resetAll();
+}
+
+//=============================================================================
+// Update all game items
+//=============================================================================
+
+void StickFight::gameStateUpdate()
+{
+	timeInState += frameTime;
+	if (gameStates==SPLASH_SCREEN && input->wasKeyPressed(VK_SPACE))
+	{
+		gameStates = MENU;
+		timeInState = 0;
+	}
+	if (gameStates==MENU) {
+		if(mainMenu->getMenuState() == MODE_1_PLAYER) {
+			gameStates = LEVEL1;
+			timeInState = 0;
+		}
+	}
+	if (gameStates==LEVEL1)
+	{
+		timeInState = 0;
+	}
+
+	if (gameStates==END)
+	{
+		PostQuitMessage(0);
+		timeInState = 0;
+	}
 }

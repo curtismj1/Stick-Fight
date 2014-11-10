@@ -42,6 +42,7 @@ private:
 	TextureManager* textures;
 	TextDX text;
 	Image p1;
+	Image splashScreen;
 
 	Boxer one;
 	Entity oneHealth;
@@ -53,6 +54,9 @@ private:
 	int nWalls;
 	Menu* mainMenu;
 	bool activeMenu;
+	GameStates gameStates;
+	float timeInState;
+	void gameStateUpdate();
 };
 
 #endif

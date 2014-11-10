@@ -270,3 +270,4 @@ void Game::deleteAll()
     SAFE_DELETE(input);
     initialized = false;
 }
+
