@@ -55,6 +55,7 @@ private:
 	int nWalls;
 	Menu* mainMenu;
 	bool activeMenu;
+	bool SFXon;
 	GameStates gameStates;
 	float timeInState;
 	void gameStateUpdate();

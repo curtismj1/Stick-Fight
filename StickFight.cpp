@@ -29,6 +29,7 @@ StickFight::~StickFight()
 //=============================================================================
 void StickFight::initialize(HWND hwnd)
 {
+	SFXon = true;
 	activeMenu = false;
 	timeInState = 0.0;
 	gameStates = SPLASH_SCREEN;
@@ -76,6 +77,7 @@ void StickFight::initialize(HWND hwnd)
 
 	if (!oneHealth.initialize(this, 0, 0, 0, &textures[5]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player one health"));
+
 	if (!twoHealth.initialize(this, 0, 0, 0, &textures[5]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player two health"));
 
@@ -92,6 +94,13 @@ void StickFight::initialize(HWND hwnd)
 	oneHealth.setScaleY(20);
 
 	twoHealth.setX(300);
+	twoHealth.setY(0);
+	twoHealth.setScaleY(20);
+
+	oneHealth.setX(0);
+	oneHealth.setY(0);
+	oneHealth.setScaleY(20);
+
 	twoHealth.setY(0);
 	twoHealth.setScaleY(20);
 
@@ -145,7 +154,6 @@ void StickFight::update()
 	gameStateUpdate();
 	if(gameStates == MENU) {
 		mainMenu->getActiveMenu()->update();
-		// Handle an action
 	}
 	if (gameStates == CHARACTER_SELECT) {
 		if (input->wasKeyPressed(VK_LEFT)) if (oneChar < 1) oneChar++; else oneChar = 0;
@@ -176,6 +184,10 @@ void StickFight::update()
 		twoHealth.setX(GAME_WIDTH - twoHealth.getScaleX());
 	}
 	if(input->wasKeyPressed(VK_ESCAPE)) activeMenu = !activeMenu;
+		
+	oneHealth.setScaleX(one.getHealth() * 2);
+	twoHealth.setScaleX(two.getHealth() * 2);
+	twoHealth.setX(GAME_WIDTH-twoHealth.getScaleX()*twoHealth.getWidth());
 }
 
 //=============================================================================
