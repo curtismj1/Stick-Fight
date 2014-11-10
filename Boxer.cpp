@@ -36,3 +36,5 @@ void Boxer::soundHit(Audio* a) {
 void Boxer::soundMiss(Audio* a) {
 	a->playCue(PUNCH_MISS);
 }
+
+void Boxer::setHealth(float h) { health = h; }

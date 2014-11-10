@@ -156,6 +156,8 @@ void StickFight::update()
 		mainMenu->getActiveMenu()->update();
 		if(mainMenu->getMenuState() == SFX_OFF) { SFXon = false; audio->stopCue(BACKGROUND); }
 		if(mainMenu->getMenuState() == SFX_ON) { SFXon = true;  audio->playCue(BACKGROUND); }
+		//if(mainMenu->getMenuState() == MODE_1_PLAYER) { gameStates = CHARACTER_SELECT; multiplayer = false; activeMenu = false; }
+		//if(mainMenu->getMenuState() == MODE_2_PLAYER) { gameStates = CHARACTER_SELECT; multiplayer = true; activeMenu = false; }
 	}
 	if (gameStates == CHARACTER_SELECT) {
 		if (input->wasKeyPressed(VK_LEFT)) { if (oneChar < 1) oneChar++; else oneChar = 0; }
@@ -166,11 +168,13 @@ void StickFight::update()
 			one[oneChar]->setX(200 - one[oneChar]->getWidth() / 2);
 			one[oneChar]->setY(300 - one[oneChar]->getHeight() / 2);
 			one[oneChar]->setScale(0.5);
-			one[oneChar]->setHealth(100);
+			one[0]->setHealth(100.0f);
+			one[1]->setHealth(100.0f);
 			two[twoChar]->setX(400 - two[twoChar]->getWidth() / 2);
 			two[twoChar]->setY(300 - two[twoChar]->getHeight() / 2);
 			two[twoChar]->setScale(0.5);
-			two[twoChar]->setHealth(100);
+			two[0]->setHealth(100.0f);
+			two[1]->setHealth(100.0f);
 			timeInState = 0.0;
 			if(multiplayer) {
 				gameStates = INSTRUCTIONS_MULTI;
@@ -224,7 +228,11 @@ void StickFight::collisions()
 			two[twoChar]->setVelocity(VECTOR2(5, 0.5));
 		two[twoChar]->damage(10);
 		two[twoChar]->stunned = 100;
-		if(SFXon) one[oneChar]->soundHit(audio);
+		if(two[twoChar]->getHealth() <= 0) {
+			// DIE
+			if(SFXon) audio->playCue(DEATH);
+		} else
+			if(SFXon) one[oneChar]->soundHit(audio);
 	}  else if(hb != 0) {
 		// Firing too often
 		// if(SFXon) one[oneChar]->soundMiss(audio);
@@ -237,7 +245,11 @@ void StickFight::collisions()
 			one[oneChar]->setVelocity(VECTOR2(-5, 0.5));
 		one[oneChar]->damage(10);
 		one[oneChar]->stunned = 100;
-		if(SFXon) two[twoChar]->soundHit(audio);
+		if(one[oneChar]->getHealth() <= 0) {
+			// DIE
+			if(SFXon) audio->playCue(DEATH);
+		} else
+			if(SFXon) two[twoChar]->soundHit(audio);
 	} else if(hb != 0) {
 		// Firing too often
 		// if(SFXon) two[twoChar]->soundMiss(audio);
@@ -304,9 +316,11 @@ void StickFight::render()
 
 			one[0]->setX(60);
 			one[0]->setY(80);
+			one[0]->setScale(1.0);
 			one[0]->setCurrentFrame(6);
 			one[1]->setX(-60);
 			one[1]->setY(-40);
+			one[1]->setScale(1.0);
 			one[1]->setCurrentFrame(0);
 			one[oneChar]->draw();
 
@@ -321,9 +335,11 @@ void StickFight::render()
 
 				two[0]->setX(310);
 				two[0]->setY(80);
+				two[0]->setScale(1.0);
 				two[0]->setCurrentFrame(6);
 				two[1]->setX(180);
 				two[1]->setY(-40);
+				two[1]->setScale(1.0);
 				two[1]->setCurrentFrame(0);
 				two[twoChar]->draw();
 			}
@@ -342,10 +358,32 @@ void StickFight::render()
 	
 			oneHealth.draw();
 			twoHealth.draw();
+
+			if(one[oneChar]->getHealth()<=0) {
+				gameStates = WIN2;
+				timeInState = 0;
+			}
+			if(two[twoChar]->getHealth()<=0) {
+				gameStates = WIN1;
+				timeInState = 0;
+			}
 			
 			break;
-		case END:
-			// You won or lost
+		case WIN1:
+			staticImages[0].draw();
+			text.print("PLAYER 1 WINS!", 10, GAME_HEIGHT / 2 - 120);
+			if(timeInState>2) {
+				resetAll();
+				gameStates = MENU;
+			}
+			break;
+		case WIN2:
+			staticImages[0].draw();
+			text.print("PLAYER 2 WINS!", 10, GAME_HEIGHT / 2 - 120);
+			if(timeInState>2) {
+				resetAll();
+				gameStates = MENU;
+			}
 			break;
 		}
 	}
@@ -368,6 +406,7 @@ void StickFight::releaseAll()
 void StickFight::resetAll()
 {
     Game::resetAll();
+	mainMenu->getActiveMenu()->update();
 }
 
 //=============================================================================
@@ -397,12 +436,6 @@ void StickFight::gameStateUpdate()
 	}
 	if (gameStates==LEVEL1)
 	{
-		timeInState = 0;
-	}
-
-	if (gameStates==END)
-	{
-		PostQuitMessage(0);
 		timeInState = 0;
 	}
 }

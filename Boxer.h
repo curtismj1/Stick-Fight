@@ -8,6 +8,7 @@ public:
 	void animate(float frameTime);
 	void soundHit(Audio* a);
 	void soundMiss(Audio* a);
+	void setHealth(float h);
 private:
 	void setCollisionBox();
 };

@@ -137,12 +137,13 @@ const char PUNCH_HIT[] = "punch_hit";
 const char SWORD_MISS[] = "sword_miss";
 const char PUNCH_MISS[] = "punch_miss";
 const char BACKGROUND[]   = "background";
+const char DEATH[] = "death";
 
 // Pattern Step Action
 enum PATTERN_STEP_ACTION {NONE, UP, DOWN, LEFT, RIGHT, TRACK, EVADE, UPLEFT};
 
 // Game states
-enum GameStates {SPLASH_SCREEN, MENU, CHARACTER_SELECT, INSTRUCTIONS_SINGLE, INSTRUCTIONS_MULTI, LEVEL1, END};
+enum GameStates {SPLASH_SCREEN, MENU, CHARACTER_SELECT, INSTRUCTIONS_SINGLE, INSTRUCTIONS_MULTI, LEVEL1, WIN1, WIN2 };
 
 // Menu Constants
 const int MENU_OFFSET = 125;

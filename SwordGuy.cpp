@@ -36,3 +36,5 @@ void SwordGuy::soundHit(Audio* a) {
 void SwordGuy::soundMiss(Audio* a) {
 	a->playCue(SWORD_MISS);
 }
+
+void SwordGuy::setHealth(float h) { health = h; }
