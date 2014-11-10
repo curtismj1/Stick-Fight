@@ -23,6 +23,7 @@ StickFight::~StickFight()
 //=============================================================================
 void StickFight::initialize(HWND hwnd)
 {
+	SFXon = true;
 	activeMenu = false;
 	timeInState = 0.0;
 	gameStates = SPLASH_SCREEN;
@@ -54,7 +55,7 @@ void StickFight::initialize(HWND hwnd)
 	if (!oneHealth.initialize(this, 0, 0, 0, &textures[5]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player one health"));
 
-	if (!two.initialize(this, 256, 256, 4, &textures[0]))
+	if (!two.initialize(this, 512, 512, 28, &textures[0]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player two"));
 
 	text.initialize(graphics, 30, false, false, "Cambria");
@@ -130,6 +131,14 @@ void StickFight::update()
 	if(activeMenu || gameStates == MENU) {
 		mainMenu->getActiveMenu()->update();
 		// Handle an action
+		switch(mainMenu->getMenuState()) {
+		case SFX_ON:
+			SFXon = true;
+			break;
+		case SFX_OFF:
+			SFXon = false;
+			break;
+		}
 	} else {
 		//one.readInput();
 		one.update(frameTime);
@@ -166,7 +175,7 @@ void StickFight::collisions()
 		else
 			two.setVelocity(VECTOR2(-2, 0.5));
 		two.damage(10);
-		two.stunned = 10;
+		//two.stunned = 10;
 	}
 	hb = two.getHitbox();
 	if (hb != 0 && one.collidesWith(*hb, cv) && one.getInvincible() == 0) {
@@ -175,7 +184,7 @@ void StickFight::collisions()
 		else
 			one.setVelocity(VECTOR2(-2, 0.5));
 		one.damage(10);
-		one.stunned = 10;
+		//one.stunned = 10;
 	}
 }
 
