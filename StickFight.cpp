@@ -37,7 +37,7 @@ void StickFight::initialize(HWND hwnd)
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing splash screen"));
 
 	for (int i = 0; i < nWalls; i++) {
-		if (!walls[i].initialize(this, 40, 2, 0, &textures[2]))
+		if (!walls[i].initialize(this, 2, 2, 0, &textures[2]))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing wall"));
 		walls[i].setCollisionType(entityNS::BOX);
 		RECT r;
@@ -60,27 +60,23 @@ void StickFight::initialize(HWND hwnd)
 	text.initialize(graphics, 30, false, false, "Cambria");
 	text.setFontColor(graphicsNS::RED);
 
-	walls[0].setX(50);
+	walls[0].setX(0);
 	walls[0].setY(400);
-	walls[0].setScale(13);
+	walls[0].setScaleX(GAME_WIDTH / 2);
+	walls[0].setScaleY(10);
 	
 	one.setX(100);
 	one.setY(300);
 	one.setScale(.5);
-	one.setCollisionRadius(one.getHeight()*one.getScaleX()-10/2);
-	one.setFrameDelay(.2f);
-	one.setFrames(6,11);
 
 	oneHealth.setX(0);
 	oneHealth.setY(0);
 	oneHealth.setScaleY(20);
 
 
-	two.setX(10);
+	two.setX(500);
 	two.setY(250);
-	two.setFrames(0, 3);
 	two.setScale(0.5);
-	two.setCollisionRadius((two.getHeight() - 30) / 2);
 
 	// Menu
 	activeMenu = false;
@@ -152,7 +148,6 @@ void StickFight::update()
 void StickFight::ai()
 {
 	one.Ai(&two);
-	
 }
 
 //=============================================================================
@@ -166,13 +161,21 @@ void StickFight::collisions()
 	VECTOR2 cv;
 	Entity* hb = one.getHitbox();
 	if (hb != 0 && two.collidesWith(*hb, cv) && two.getInvincible() == 0) {
-		//kick back
+		if (cv.x > 0)
+			two.setVelocity(VECTOR2(-2, 0.5));
+		else
+			two.setVelocity(VECTOR2(-2, 0.5));
 		two.damage(10);
+		two.stunned = 10;
 	}
 	hb = two.getHitbox();
 	if (hb != 0 && one.collidesWith(*hb, cv) && one.getInvincible() == 0) {
-		//kick back?
+		if (cv.x > 0)
+			one.setVelocity(VECTOR2(-2, 0.5));
+		else
+			one.setVelocity(VECTOR2(-2, 0.5));
 		one.damage(10);
+		one.stunned = 10;
 	}
 }
 

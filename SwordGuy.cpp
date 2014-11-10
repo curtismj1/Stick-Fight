@@ -11,7 +11,7 @@ void SwordGuy::setCollisionBox() {
 	edge.bottom = (getHeight() / 2) - 20;
 }
 
-void SwordGuy::animate() {
+void SwordGuy::animate(float frameTime) {
 	if (isWalking) {
 		setFrameDelay(0.1);
 		if (facingRight)

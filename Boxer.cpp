@@ -10,11 +10,12 @@ void Boxer::setCollisionBox() {
 	edge.top = -getHeight() / 2;
 	edge.bottom = (getHeight() / 2) - 20;
 }
+
 void Boxer::jab(){
 			setFrameDelay(0.05);
 			setFrames(12,17);
-			
 }
+
 void Boxer::cross(){
 			setFrameDelay(0.15);
 			setFrames(18,23);
@@ -22,23 +23,16 @@ void Boxer::cross(){
 				time = 0;
 			}
 }
-void Boxer::animate() {
+
+void Boxer::animate(float frameTime) {
 	time += getFrameDelay();
 	if (isWalking) {
-
-		if(time>15){
-			jab();
-
-		}
-		else{
 		setFrameDelay(0.1);
-		setFrames(6, 11);
-		}
+		setFrames(0, 5);
 		flipHorizontal(!facingRight);
-		
 	} else {
 		setFrameDelay(0.075);
-		setFrames(0, 5);
+		setFrames(6, 11);
 		flipHorizontal(!facingRight);
 	}
 }
