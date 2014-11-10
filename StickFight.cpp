@@ -57,6 +57,8 @@ void StickFight::initialize(HWND hwnd)
 
 	if (!two.initialize(this, 512, 512, 28, &textures[0]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player two"));
+	if (!twoHealth.initialize(this, 0, 0, 0, &textures[5]))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player two health"));
 
 	text.initialize(graphics, 30, false, false, "Cambria");
 	text.setFontColor(graphicsNS::RED);
@@ -78,6 +80,13 @@ void StickFight::initialize(HWND hwnd)
 	two.setX(500);
 	two.setY(250);
 	two.setScale(0.5);
+
+	oneHealth.setX(0);
+	oneHealth.setY(0);
+	oneHealth.setScaleY(20);
+
+	twoHealth.setY(0);
+	twoHealth.setScaleY(20);
 
 	// Menu
 	activeMenu = false;
@@ -149,6 +158,8 @@ void StickFight::update()
 	if(input->wasKeyPressed(VK_ESCAPE)) activeMenu = !activeMenu;
 
 	oneHealth.setScaleX(one.getHealth() * 2);
+	twoHealth.setScaleX(two.getHealth() * 2);
+	twoHealth.setX(GAME_WIDTH-twoHealth.getScaleX()*twoHealth.getWidth());
 }
 
 //=============================================================================
@@ -231,6 +242,7 @@ void StickFight::render()
 			for (int i = 0; i < nWalls; i++) walls[i].draw();
 	
 			oneHealth.draw();
+			twoHealth.draw();
 			
 			break;
 		case END:
