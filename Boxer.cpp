@@ -11,7 +11,7 @@ void Boxer::setCollisionBox() {
 	edge.bottom = (getHeight() / 2) - 20;
 }
 
-void Boxer::animate() {
+void Boxer::animate(float frameTime) {
 	if (isWalking) {
 		setFrameDelay(0.1);
 		setFrames(0, 5);

@@ -10,6 +10,7 @@ Figure::Figure() {
 	facingRight = true;
 	health = 100;
 	invincible = 0;
+	stunned = 0;
 }
 
 void Figure::damage(int d) {
@@ -35,6 +36,10 @@ void Figure::setCollisionBox() {
 }
 
 void Figure::readInput() {
+	if (stunned > 0) {
+		stunned--;
+		return;
+	}
 	isWalking = false;
 	if (input->isKeyDown(VK_LEFT) && velocity.x > -maxHorizontalSpeed) {
 		velocity.x += -0.2;
@@ -62,7 +67,6 @@ void Figure::readInput() {
 		}
 
 	} else isAttacking = false;
-	animate();
 }
 
 void Figure::update(float frameTime) {
@@ -77,6 +81,7 @@ void Figure::update(float frameTime) {
 	spriteData.y += velocity.y;
 
 	if (invincible > 0) invincible--;
+	animate(frameTime);
 }
 
 void Figure::collisions(Entity* walls, int nWalls) {
@@ -90,6 +95,11 @@ void Figure::collisions(Entity* walls, int nWalls) {
 }
 
 void Figure::Ai(Figure* enemy) {
+	if (stunned > 0)  {
+		stunned--;
+		return;
+	}
+	isWalking = false;
 	if (enemy->getX() > getX()) {
 		if (velocity.x < maxAIHorizontalSpeed)
 			velocity.x += 0.2;
@@ -101,5 +111,4 @@ void Figure::Ai(Figure* enemy) {
 		facingRight = false;
 		isWalking = true;
 	}
-	animate();
 }

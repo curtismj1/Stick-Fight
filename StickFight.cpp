@@ -160,13 +160,21 @@ void StickFight::collisions()
 	VECTOR2 cv;
 	Entity* hb = one.getHitbox();
 	if (hb != 0 && two.collidesWith(*hb, cv) && two.getInvincible() == 0) {
-		//kick back
+		if (cv.x > 0)
+			two.setVelocity(VECTOR2(-2, 0.5));
+		else
+			two.setVelocity(VECTOR2(-2, 0.5));
 		two.damage(10);
+		two.stunned = 10;
 	}
 	hb = two.getHitbox();
 	if (hb != 0 && one.collidesWith(*hb, cv) && one.getInvincible() == 0) {
-		//kick back?
+		if (cv.x > 0)
+			one.setVelocity(VECTOR2(-2, 0.5));
+		else
+			one.setVelocity(VECTOR2(-2, 0.5));
 		one.damage(10);
+		one.stunned = 10;
 	}
 }
 

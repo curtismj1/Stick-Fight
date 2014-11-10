@@ -5,7 +5,7 @@
 class SwordGuy : public Figure {
 public:
 	SwordGuy();
-	void animate();
+	void animate(float frameTime);
 private:
 	void setCollisionBox();
 };

@@ -14,7 +14,9 @@ public:
 	void damage(int d);
 	int getInvincible() { return invincible; }
 	void Ai(Figure*);
-	virtual void animate() = 0;
+	virtual void animate(float frameTime) = 0;
+
+	int stunned;
 protected:
 	virtual void setCollisionBox();
 
