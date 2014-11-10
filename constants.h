@@ -132,17 +132,17 @@ const char WAVE_BANK[]  = "audio\\Win\\stick_wave_bank.xwb";
 const char SOUND_BANK[] = "audio\\Win\\stick_sound_bank.xsb";
 
 // audio cues
-const char BEEP1[] = "beep1";
-const char BEEP2[] = "beep2";
-const char BEEP3[] = "beep3";
-const char BEEP4[] = "beep4";
-const char HIT[]   = "hit";
+const char SWORD_HIT[] = "sword_hit";
+const char PUNCH_HIT[] = "punch_hit";
+const char SWORD_MISS[] = "sword_miss";
+const char PUNCH_MISS[] = "punch_miss";
+const char BACKGROUND[]   = "background";
 
 // Pattern Step Action
 enum PATTERN_STEP_ACTION {NONE, UP, DOWN, LEFT, RIGHT, TRACK, EVADE, UPLEFT};
 
 // Game states
-enum GameStates {SPLASH_SCREEN, MENU, CHARACTER_SELECT, LEVEL1, END};
+enum GameStates {SPLASH_SCREEN, MENU, CHARACTER_SELECT, INSTRUCTIONS_SINGLE, INSTRUCTIONS_MULTI, LEVEL1, END};
 
 // Menu Constants
 const int MENU_OFFSET = 125;

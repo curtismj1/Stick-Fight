@@ -28,3 +28,11 @@ void Boxer::animate(float frameTime) {
 		flipHorizontal(!facingRight);
 	}
 }
+
+void Boxer::soundHit(Audio* a) {
+	a->playCue(PUNCH_HIT);
+}
+
+void Boxer::soundMiss(Audio* a) {
+	a->playCue(PUNCH_MISS);
+}

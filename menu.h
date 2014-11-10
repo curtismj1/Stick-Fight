@@ -58,6 +58,7 @@ public:
 	std::vector<std::string> getMenuItems() { return menuItems; }
 	void setMenuItems(std::vector<std::string> v);
 	Menu* getActiveMenu() { return activeMenu; }
+	void setActiveMenu(Menu* m) { activeMenu = m; m->linePtr=0; }
 	float getOffset() { return offset; }
 	void setOffset(float o) { offset = o; }
 	void setOpacity(int o) { opacity = o; }

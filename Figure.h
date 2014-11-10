@@ -15,7 +15,8 @@ public:
 	int getInvincible() { return invincible; }
 	void Ai(Figure*);
 	virtual void animate(float frameTime) = 0;
-
+	virtual void soundHit(Audio* a) = 0;
+	virtual void soundMiss(Audio* a) = 0;
 	int stunned;
 protected:
 	virtual void setCollisionBox() = 0;

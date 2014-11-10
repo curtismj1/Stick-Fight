@@ -28,3 +28,11 @@ void SwordGuy::animate(float frameTime) {
 		flipHorizontal(!facingRight);
 	}
 }
+
+void SwordGuy::soundHit(Audio* a) {
+	a->playCue(SWORD_HIT);
+}
+
+void SwordGuy::soundMiss(Audio* a) {
+	a->playCue(SWORD_MISS);
+}

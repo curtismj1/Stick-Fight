@@ -6,6 +6,8 @@ class Boxer : public Figure {
 public:
 	Boxer();
 	void animate(float frameTime);
+	void soundHit(Audio* a);
+	void soundMiss(Audio* a);
 private:
 	void setCollisionBox();
 };

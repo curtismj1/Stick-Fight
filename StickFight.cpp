@@ -113,7 +113,7 @@ void StickFight::initialize(HWND hwnd)
 
 	std::vector<std::string> menuItems;
 	menuItems.push_back("New Game >");	// Menu 1
-	menuItems.push_back("Cheats >");	// Menu 2
+	menuItems.push_back("Sound FX >");	// Menu 2
 	menuItems.push_back("I'm Feeling Lucky");
 	mainMenu->setMenuItems(menuItems);
 
@@ -152,15 +152,17 @@ void StickFight::initialize(HWND hwnd)
 void StickFight::update()
 {
 	gameStateUpdate();
-	if(gameStates == MENU) {
+	if(gameStates == MENU || (activeMenu && gameStates != CHARACTER_SELECT)) {
 		mainMenu->getActiveMenu()->update();
+		if(mainMenu->getMenuState() == SFX_OFF) { SFXon = false; audio->stopCue(BACKGROUND); }
+		if(mainMenu->getMenuState() == SFX_ON) { SFXon = true;  audio->playCue(BACKGROUND); }
 	}
 	if (gameStates == CHARACTER_SELECT) {
-		if (input->wasKeyPressed(VK_LEFT)) if (oneChar < 1) oneChar++; else oneChar = 0;
-		if (input->wasKeyPressed(VK_RIGHT)) if (oneChar > 0) oneChar--; else oneChar = 1;
+		if (input->wasKeyPressed(VK_LEFT)) { if (oneChar < 1) oneChar++; else oneChar = 0; }
+		if (input->wasKeyPressed(VK_RIGHT)) { if (oneChar > 0) oneChar--; else oneChar = 1; }
 		if (input->wasKeyPressed(0x44)) if (twoChar < 1) twoChar++; else twoChar = 0;
 		if (input->wasKeyPressed(0x41)) if (twoChar > 0) twoChar--; else twoChar = 1;
-		if (input->wasKeyPressed(VK_SPACE)) {
+		if (input->wasKeyPressed(VK_SPACE) || input->wasKeyPressed(VK_RETURN)) {
 			one[oneChar]->setX(200 - one[oneChar]->getWidth() / 2);
 			one[oneChar]->setY(300 - one[oneChar]->getHeight() / 2);
 			one[oneChar]->setScale(0.5);
@@ -169,10 +171,15 @@ void StickFight::update()
 			two[twoChar]->setY(300 - two[twoChar]->getHeight() / 2);
 			two[twoChar]->setScale(0.5);
 			two[twoChar]->setHealth(100);
-			gameStates = LEVEL1;
+			timeInState = 0.0;
+			if(multiplayer) {
+				gameStates = INSTRUCTIONS_MULTI;
+			} else {
+				gameStates = INSTRUCTIONS_SINGLE;
+			}
 		}
 	}
-	if (gameStates == LEVEL1) {
+	if (gameStates == LEVEL1 && !activeMenu) {
 		one[oneChar]->readInput(false);
 		one[oneChar]->update(frameTime);
 		if (multiplayer) two[twoChar]->readInput(true);
@@ -183,11 +190,10 @@ void StickFight::update()
 		twoHealth.setScaleX(two[twoChar]->getHealth() * 2);
 		twoHealth.setX(GAME_WIDTH - twoHealth.getScaleX());
 	}
-	if(input->wasKeyPressed(VK_ESCAPE)) activeMenu = !activeMenu;
-		
-	oneHealth.setScaleX(one.getHealth() * 2);
-	twoHealth.setScaleX(two.getHealth() * 2);
-	twoHealth.setX(GAME_WIDTH-twoHealth.getScaleX()*twoHealth.getWidth());
+	if(input->wasKeyPressed(VK_ESCAPE)) {
+		activeMenu = !activeMenu;
+		mainMenu->setActiveMenu(mainMenu);
+	}
 }
 
 //=============================================================================
@@ -218,6 +224,10 @@ void StickFight::collisions()
 			two[twoChar]->setVelocity(VECTOR2(5, 0.5));
 		two[twoChar]->damage(10);
 		two[twoChar]->stunned = 100;
+		if(SFXon) one[oneChar]->soundHit(audio);
+	}  else if(hb != 0) {
+		// Firing too often
+		// if(SFXon) one[oneChar]->soundMiss(audio);
 	}
 	hb = two[twoChar]->getHitbox();
 	if (hb != 0 && one[oneChar]->collidesWith(*hb, cv) && one[oneChar]->getInvincible() == 0) {
@@ -227,6 +237,10 @@ void StickFight::collisions()
 			one[oneChar]->setVelocity(VECTOR2(-5, 0.5));
 		one[oneChar]->damage(10);
 		one[oneChar]->stunned = 100;
+		if(SFXon) two[twoChar]->soundHit(audio);
+	} else if(hb != 0) {
+		// Firing too often
+		// if(SFXon) two[twoChar]->soundMiss(audio);
 	}
 }
 
@@ -236,87 +250,104 @@ void StickFight::collisions()
 void StickFight::render()
 {
 	graphics->spriteBegin();
-	switch(gameStates) {
-	case SPLASH_SCREEN:
-		staticImages[0].draw();
-		text.print(		"Heroes and Villians of the Ages", GAME_WIDTH / 2 - 175, GAME_HEIGHT / 2 - 120);
-		if (timeInState > 2) {
-			text.print(	"Meeting for Epic Battle", GAME_WIDTH / 2 - 150, GAME_HEIGHT / 2 - 80);
-		}
-		if (timeInState > 4) {
-			text.print(	"In the Arenas of the Ancients", GAME_WIDTH / 2 - 160, GAME_HEIGHT / 2 - 40);
-		}
-		if (timeInState > 6) {
-			text.print(	"Ohh, and They are Stick Figures", GAME_WIDTH / 2 - 175, GAME_HEIGHT / 2);
-		}
-		if (timeInState > 8) {
-			timeInState = 0.0;
-			gameStates = MENU;
-		}
-		break;
-	case MENU:
-		// Render menu
+	if(activeMenu) {
 		staticImages[0].draw();
 		mainMenu->getActiveMenu()->displayMenu(frameTime);
-		break;
-	case CHARACTER_SELECT:
-		staticImages[0].draw();
+	} else {
+		switch(gameStates) {
+		case SPLASH_SCREEN:
+			staticImages[0].draw();
+			text.print(		"Heroes and Villians of the Ages", GAME_WIDTH / 2 - 175, GAME_HEIGHT / 2 - 120);
+			if (timeInState > 2) {
+				text.print(	"Meeting for Epic Battle", GAME_WIDTH / 2 - 150, GAME_HEIGHT / 2 - 80);
+			}
+			if (timeInState > 4) {
+				text.print(	"In the Arenas of the Ancients", GAME_WIDTH / 2 - 160, GAME_HEIGHT / 2 - 40);
+			}
+			if (timeInState > 6) {
+				text.print(	"Ohh, and They are Stick Figures", GAME_WIDTH / 2 - 175, GAME_HEIGHT / 2);
+			}
+			if (timeInState > 8) {
+				timeInState = 0.0;
+				audio->playCue(BACKGROUND);
+				gameStates = MENU;
+			}
+			break;
+		case MENU:
+			// Render menu
+			staticImages[0].draw();
+			mainMenu->getActiveMenu()->displayMenu(frameTime);
+			break;
+		case INSTRUCTIONS_MULTI:
+			staticImages[0].draw();
+			text.print("PLAYER 1: ARROW KEYS to move, SPACE to attack", 10, GAME_HEIGHT / 2 - 120);
+			text.print("PLAYER 2: WASD to move, TAB to attack", 10, GAME_HEIGHT / 2);
+			if(timeInState>2) gameStates = LEVEL1;
+			break;
+		case INSTRUCTIONS_SINGLE:
+			staticImages[0].draw();
+			text.print("PLAYER 1: ARROW KEYS to move, SPACE to attack", 10, GAME_HEIGHT / 2 - 120);
+			if(timeInState>2) gameStates = LEVEL1;
+			break;
+		case CHARACTER_SELECT:
+			staticImages[0].draw();
 
-		text.print("Choose your character", 100, 10);
+			text.print("Choose your character", 100, 10);
 
-		staticImages[1].setX(50);
-		staticImages[1].setY(70);
-		staticImages[1].setScaleX(200);
-		staticImages[1].setScaleY(300);
-		staticImages[1].draw();
-
-		text.print("Player 1", 50, 40);
-
-		one[0]->setX(60);
-		one[0]->setY(80);
-		one[0]->setCurrentFrame(6);
-		one[1]->setX(-60);
-		one[1]->setY(-40);
-		one[1]->setCurrentFrame(0);
-		one[oneChar]->draw();
-
-		if (multiplayer) {
-			staticImages[1].setX(300);
+			staticImages[1].setX(50);
 			staticImages[1].setY(70);
 			staticImages[1].setScaleX(200);
 			staticImages[1].setScaleY(300);
 			staticImages[1].draw();
 
-			text.print("Player 2", 290, 40);
+			text.print("Player 1", 50, 40);
 
-			two[0]->setX(310);
-			two[0]->setY(80);
-			two[0]->setCurrentFrame(6);
-			two[1]->setX(180);
-			two[1]->setY(-40);
-			two[1]->setCurrentFrame(0);
-			two[twoChar]->draw();
-		}
-		break;
-	case LEVEL1:
-		staticImages[2].draw();
-		if (one[oneChar]->getInvincible() > 0)
-			one[oneChar]->draw(SETCOLOR_ARGB(100, 255, 255, 255));
-		else
+			one[0]->setX(60);
+			one[0]->setY(80);
+			one[0]->setCurrentFrame(6);
+			one[1]->setX(-60);
+			one[1]->setY(-40);
+			one[1]->setCurrentFrame(0);
 			one[oneChar]->draw();
 
-		if (two[twoChar]->getInvincible() > 0)
-			two[twoChar]->draw(SETCOLOR_ARGB(100, 255, 255, 255));
-		else
-			two[twoChar]->draw();
+			if (multiplayer) {
+				staticImages[1].setX(300);
+				staticImages[1].setY(70);
+				staticImages[1].setScaleX(200);
+				staticImages[1].setScaleY(300);
+				staticImages[1].draw();
+
+				text.print("Player 2", 290, 40);
+
+				two[0]->setX(310);
+				two[0]->setY(80);
+				two[0]->setCurrentFrame(6);
+				two[1]->setX(180);
+				two[1]->setY(-40);
+				two[1]->setCurrentFrame(0);
+				two[twoChar]->draw();
+			}
+			break;
+		case LEVEL1:
+			staticImages[2].draw();
+			if (one[oneChar]->getInvincible() > 0)
+				one[oneChar]->draw(SETCOLOR_ARGB(100, 255, 255, 255));
+			else
+				one[oneChar]->draw();
+
+			if (two[twoChar]->getInvincible() > 0)
+				two[twoChar]->draw(SETCOLOR_ARGB(100, 255, 255, 255));
+			else
+				two[twoChar]->draw();
 	
-		oneHealth.draw();
-		twoHealth.draw();
+			oneHealth.draw();
+			twoHealth.draw();
 			
-		break;
-	case END:
-		// You won or lost
-		break;
+			break;
+		case END:
+			// You won or lost
+			break;
+		}
 	}
 	graphics->spriteEnd();
 }
@@ -349,6 +380,7 @@ void StickFight::gameStateUpdate()
 	if (gameStates==SPLASH_SCREEN && input->wasKeyPressed(VK_SPACE))
 	{
 		gameStates = MENU;
+		audio->playCue(BACKGROUND);
 		timeInState = 0;
 	}
 	if (gameStates==MENU) {
