@@ -18,7 +18,7 @@ public:
 
 	int stunned;
 protected:
-	virtual void setCollisionBox();
+	virtual void setCollisionBox() = 0;
 
 	bool onGround;
 	bool facingRight;
@@ -29,5 +29,6 @@ protected:
 	int health;
 	int invincible;
 	
+	int attackCounter;
 };
 #endif

@@ -5,24 +5,26 @@ SwordGuy::SwordGuy() : Figure() {
 }
 
 void SwordGuy::setCollisionBox() {
-	edge.left = -getWidth() / 2;
-	edge.right = getWidth() / 2;
-	edge.top = -getHeight() / 2;
-	edge.bottom = (getHeight() / 2) - 20;
+	edge.left = -90 / 2;
+	edge.right = 90 / 2;
+	edge.top = -200 / 2;
+	edge.bottom = (200 / 2);
 }
 
 void SwordGuy::animate(float frameTime) {
+	if (isAttacking) {
+		setFrameDelay(0.01);
+		setFrames(8, 27);
+		if (currentFrame == endFrame) isAttacking = false;
+		else return;
+	}
 	if (isWalking) {
 		setFrameDelay(0.1);
-		if (facingRight)
-			setFrames(4, 7);
-		else
-			setFrames(12, 15);
+		setFrames(4, 7);
+		flipHorizontal(!facingRight);
 	} else {
 		setFrameDelay(0.5);
-		if (facingRight)
-			setFrames(0, 3);
-		else
-			setFrames(8, 11);
+		setFrames(0, 3);
+		flipHorizontal(!facingRight);
 	}
 }

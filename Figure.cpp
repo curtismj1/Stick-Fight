@@ -8,9 +8,11 @@ Figure::Figure() {
 	collisionType = entityNS::BOX;
 	onGround = false;
 	facingRight = true;
+	isAttacking = false;
 	health = 100;
 	invincible = 0;
 	stunned = 0;
+	attackCounter = 0;
 }
 
 void Figure::damage(int d) {
@@ -22,17 +24,11 @@ void Figure::damage(int d) {
 
 bool Figure::initialize(Game *gamePtr, int width, int height, int ncols, TextureManager *textureM) {
 	hitbox.initialize(gamePtr, 0, 0, 0, textureM + 1);
-	hitbox.setScale(10);
+	hitbox.setScaleX(70);
+	hitbox.setScaleY(100);
 	bool r = Entity::initialize(gamePtr, width, height, ncols, textureM);
 	setCollisionBox();
 	return r;
-}
-
-void Figure::setCollisionBox() {
-	edge.left = -getWidth() / 2;
-	edge.right = getWidth() / 2;
-	edge.top = -getHeight() / 2;
-	edge.bottom = getHeight() / 2;
 }
 
 void Figure::readInput() {
@@ -40,6 +36,7 @@ void Figure::readInput() {
 		stunned--;
 		return;
 	}
+	if (isAttacking) return;
 	isWalking = false;
 	if (input->isKeyDown(VK_LEFT) && velocity.x > -maxHorizontalSpeed) {
 		velocity.x += -0.2;
@@ -59,14 +56,12 @@ void Figure::readInput() {
 	if (input->isKeyDown(VK_SPACE)) {
 		isAttacking = true;
 		if (facingRight) {
-			hitbox.setX(spriteData.x + spriteData.width * spriteData.scaleX);
-			hitbox.setY(spriteData.y + spriteData.height * spriteData.scaleY / 2);
+			hitbox.setX(getCenterX());
 		} else {
-			hitbox.setX(spriteData.x - hitbox.getWidth() * hitbox.getScaleX());
-			hitbox.setY(spriteData.y + spriteData.height * spriteData.scaleY / 2);
+			hitbox.setX(getCenterX() - hitbox.getScaleX());
 		}
-
-	} else isAttacking = false;
+		hitbox.setY(getCenterY() - hitbox.getScaleY() / 2);
+	}
 }
 
 void Figure::update(float frameTime) {

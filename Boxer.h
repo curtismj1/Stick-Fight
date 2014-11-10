@@ -6,12 +6,7 @@ class Boxer : public Figure {
 public:
 	Boxer();
 	void animate(float frameTime);
-	void animate();
-	void jab();
-	void cross();
 private:
-	float time;
 	void setCollisionBox();
-	
 };
 #endif

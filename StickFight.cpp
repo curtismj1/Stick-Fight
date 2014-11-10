@@ -48,13 +48,13 @@ void StickFight::initialize(HWND hwnd)
 		walls[i].setEdge(r);
 	}
 
-	if (!one.initialize(this, 200, 260, 6, &textures[3]))
+	if (!one.initialize(this, 180, 260, 6, &textures[3]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player one"));
 
 	if (!oneHealth.initialize(this, 0, 0, 0, &textures[5]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player one health"));
 
-	if (!two.initialize(this, 256, 256, 4, &textures[0]))
+	if (!two.initialize(this, 512, 512, 4, &textures[0]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player two"));
 
 	text.initialize(graphics, 30, false, false, "Cambria");
@@ -212,12 +212,12 @@ void StickFight::render()
 				two.draw(SETCOLOR_ARGB(100, 255, 255, 255));
 			else
 				two.draw();
-			if (one.getHitbox() != 0) {
+			/*if (one.getHitbox() != 0) {
 				one.getHitbox()->draw();
 			}
 			if(two.getHitbox() != 0){
 				two.getHitbox()->draw();
-			}
+			}*/
 	
 			for (int i = 0; i < nWalls; i++) walls[i].draw();
 	

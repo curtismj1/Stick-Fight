@@ -1,31 +1,23 @@
 #include "Boxer.h"
 
 Boxer::Boxer() : Figure() {
-	time = 0;
+
 }
 
 void Boxer::setCollisionBox() {
-	edge.left = -getWidth() / 2;
-	edge.right = getWidth() / 2;
-	edge.top = -getHeight() / 2;
-	edge.bottom = (getHeight() / 2) - 20;
-}
-
-void Boxer::jab(){
-			setFrameDelay(0.05);
-			setFrames(12,17);
-}
-
-void Boxer::cross(){
-			setFrameDelay(0.15);
-			setFrames(18,23);
-			if(getCurrentFrame() == 23){
-				time = 0;
-			}
+	edge.left = -90 / 2;
+	edge.right = 90 / 2;
+	edge.top = -200 / 2;
+	edge.bottom = (200 / 2);
 }
 
 void Boxer::animate(float frameTime) {
-	time += getFrameDelay();
+	if (isAttacking) {
+		setFrameDelay(0.1);
+		setFrames(12, 23);
+		if (currentFrame == endFrame) isAttacking = false;
+		else return;
+	}
 	if (isWalking) {
 
 		setFrameDelay(0.1);
@@ -36,5 +28,4 @@ void Boxer::animate(float frameTime) {
 		setFrames(6, 11);
 		flipHorizontal(!facingRight);
 	}
-
 }
