@@ -29,17 +29,20 @@ void Boxer::animate(float frameTime) {
 
 		if(time>15){
 			jab();
-
 		}
 		else{
 		setFrameDelay(0.1);
+		
+		
 		setFrames(6, 11);
-		}
 		flipHorizontal(!facingRight);
 		
-	} else {
+		} 
+	}
+	else {
 		setFrameDelay(0.075);
 		setFrames(0, 5);
 		flipHorizontal(!facingRight);
 	}
+
 }
