@@ -5,8 +5,14 @@
 //=============================================================================
 StickFight::StickFight() {
 	textures = new TextureManager[nTextures];
+	staticImages = new Image[nImages];
 	nWalls = 1;
 	walls = new Entity[nWalls];
+
+	one = new Figure*[2];
+	oneChar = 0;
+	two = new Figure*[2];
+	twoChar = 0;
 }
 
 //=============================================================================
@@ -27,14 +33,19 @@ void StickFight::initialize(HWND hwnd)
 	timeInState = 0.0;
 	gameStates = SPLASH_SCREEN;
     Game::initialize(hwnd); // throws GameError
-	for (int i = 0; i < nTextures; i++){
+	for (int i = 0; i < nTextures; i++) {
 		if (!textures[i].initialize(graphics, images[i].c_str())) 
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing texture"));
-
 	}
 
-	if (!splashScreen.initialize(graphics, GAME_WIDTH, GAME_HEIGHT, 0, &textures[6]))
-			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing splash screen"));
+	for (int i = 0; i < nImages; i++) {
+		if (!staticImages[i].initialize(graphics, 0, 0, 0, &textures[loadImages[i]]))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Images"));
+	}
+	staticImages[0].setX(0);
+	staticImages[0].setY(0);
+	staticImages[0].setScaleX(GAME_WIDTH);
+	staticImages[0].setScaleY(GAME_HEIGHT);
 
 	for (int i = 0; i < nWalls; i++) {
 		if (!walls[i].initialize(this, 2, 2, 0, &textures[2]))
@@ -48,14 +59,25 @@ void StickFight::initialize(HWND hwnd)
 		walls[i].setEdge(r);
 	}
 
-	if (!one.initialize(this, 180, 260, 6, &textures[3]))
+	one[0] = new Boxer();
+	one[1] = new SwordGuy();
+	if (!one[0]->initialize(this, 199, 260, 6, &textures[3]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player one"));
+	if (!one[1]->initialize(this, 512, 512, 4, &textures[0]))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player one"));
+
+	two[0] = new Boxer();
+	two[1] = new SwordGuy();
+	if (!two[0]->initialize(this, 199, 260, 6, &textures[3]))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player two"));
+	if (!two[1]->initialize(this, 512, 512, 4, &textures[0]))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player two"));
+
 
 	if (!oneHealth.initialize(this, 0, 0, 0, &textures[5]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player one health"));
-
-	if (!two.initialize(this, 512, 512, 4, &textures[0]))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player two"));
+	if (!twoHealth.initialize(this, 0, 0, 0, &textures[5]))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player two health"));
 
 	text.initialize(graphics, 30, false, false, "Cambria");
 	text.setFontColor(graphicsNS::RED);
@@ -64,32 +86,26 @@ void StickFight::initialize(HWND hwnd)
 	walls[0].setY(400);
 	walls[0].setScaleX(GAME_WIDTH / 2);
 	walls[0].setScaleY(10);
-	
-	one.setX(100);
-	one.setY(300);
-	one.setScale(.5);
 
 	oneHealth.setX(0);
 	oneHealth.setY(0);
 	oneHealth.setScaleY(20);
 
-
-	two.setX(500);
-	two.setY(250);
-	two.setScale(0.5);
+	twoHealth.setX(300);
+	twoHealth.setY(0);
+	twoHealth.setScaleY(20);
 
 	// Menu
 	activeMenu = false;
 	mainMenu = new Menu();
 	mainMenu->initialize(graphics, input, NULL);
 
-	mainMenu->setMenuHeading("Options");
+	mainMenu->setMenuHeading("Stick Fight");
 
 	std::vector<std::string> menuItems;
 	menuItems.push_back("New Game >");	// Menu 1
-	menuItems.push_back("SoundFX >");	// Menu 2
+	menuItems.push_back("Cheats >");	// Menu 2
 	menuItems.push_back("I'm Feeling Lucky");
-	menuItems.push_back("Credits");
 	mainMenu->setMenuItems(menuItems);
 
 	std::vector<Menu*> children = mainMenu->getChildren();
@@ -103,7 +119,7 @@ void StickFight::initialize(HWND hwnd)
 	children[0] = menu1;
 
 	menu1->setMenuItems(menuItems);
-	menu1->setMenuHeading("Characters");
+	menu1->setMenuHeading("Choose Amount of Players");
 
 	// menu2
 	Menu* menu2 = new Menu();
@@ -127,19 +143,39 @@ void StickFight::initialize(HWND hwnd)
 void StickFight::update()
 {
 	gameStateUpdate();
-	if(activeMenu || gameStates == MENU) {
+	if(gameStates == MENU) {
 		mainMenu->getActiveMenu()->update();
 		// Handle an action
-	} else {
-		//one.readInput();
-		one.update(frameTime);
-		two.readInput();
-		two.update(frameTime);
+	}
+	if (gameStates == CHARACTER_SELECT) {
+		if (input->wasKeyPressed(VK_LEFT)) if (oneChar < 1) oneChar++; else oneChar = 0;
+		if (input->wasKeyPressed(VK_RIGHT)) if (oneChar > 0) oneChar--; else oneChar = 1;
+		if (input->wasKeyPressed(0x44)) if (twoChar < 1) twoChar++; else twoChar = 0;
+		if (input->wasKeyPressed(0x41)) if (twoChar > 0) twoChar--; else twoChar = 1;
+		if (input->wasKeyPressed(VK_SPACE)) {
+			one[oneChar]->setX(200 - one[oneChar]->getWidth() / 2);
+			one[oneChar]->setY(300 - one[oneChar]->getHeight() / 2);
+			one[oneChar]->setScale(0.5);
+			one[oneChar]->setHealth(100);
+			two[twoChar]->setX(400 - two[twoChar]->getWidth() / 2);
+			two[twoChar]->setY(300 - two[twoChar]->getHeight() / 2);
+			two[twoChar]->setScale(0.5);
+			two[twoChar]->setHealth(100);
+			gameStates = LEVEL1;
+		}
+	}
+	if (gameStates == LEVEL1) {
+		one[oneChar]->readInput(false);
+		one[oneChar]->update(frameTime);
+		if (multiplayer) two[twoChar]->readInput(true);
+		two[twoChar]->update(frameTime);
 		for (int i = 0; i < nWalls; i++) walls[i].update(frameTime);
+
+		oneHealth.setScaleX(one[oneChar]->getHealth() * 2);
+		twoHealth.setScaleX(two[twoChar]->getHealth() * 2);
+		twoHealth.setX(GAME_WIDTH - twoHealth.getScaleX());
 	}
 	if(input->wasKeyPressed(VK_ESCAPE)) activeMenu = !activeMenu;
-
-	oneHealth.setScaleX(one.getHealth() * 2);
 }
 
 //=============================================================================
@@ -147,7 +183,9 @@ void StickFight::update()
 //=============================================================================
 void StickFight::ai()
 {
-	one.Ai(&two);
+	if (gameStates != LEVEL1) return;
+	if (!multiplayer) 
+		two[twoChar]->Ai(one[oneChar]);
 }
 
 //=============================================================================
@@ -155,27 +193,28 @@ void StickFight::ai()
 //=============================================================================
 void StickFight::collisions()
 {
-	one.collisions(walls, nWalls);
-	two.collisions(walls, nWalls);
+	if (gameStates != LEVEL1) return;
+	one[oneChar]->collisions(walls, nWalls);
+	two[twoChar]->collisions(walls, nWalls);
 
 	VECTOR2 cv;
-	Entity* hb = one.getHitbox();
-	if (hb != 0 && two.collidesWith(*hb, cv) && two.getInvincible() == 0) {
-		if (cv.x > 0)
-			two.setVelocity(VECTOR2(-2, 0.5));
+	Entity* hb = one[oneChar]->getHitbox();
+	if (hb != 0 && two[twoChar]->collidesWith(*hb, cv) && two[twoChar]->getInvincible() == 0) {
+		if (one[oneChar]->getCenterX() > two[twoChar]->getCenterX())
+			two[twoChar]->setVelocity(VECTOR2(-5, 0.5));
 		else
-			two.setVelocity(VECTOR2(-2, 0.5));
-		two.damage(10);
-		two.stunned = 10;
+			two[twoChar]->setVelocity(VECTOR2(5, 0.5));
+		two[twoChar]->damage(10);
+		two[twoChar]->stunned = 100;
 	}
-	hb = two.getHitbox();
-	if (hb != 0 && one.collidesWith(*hb, cv) && one.getInvincible() == 0) {
-		if (cv.x > 0)
-			one.setVelocity(VECTOR2(-2, 0.5));
+	hb = two[twoChar]->getHitbox();
+	if (hb != 0 && one[oneChar]->collidesWith(*hb, cv) && one[oneChar]->getInvincible() == 0) {
+		if (one[oneChar]->getCenterX() > two[twoChar]->getCenterX())
+			one[oneChar]->setVelocity(VECTOR2(5, 0.5));
 		else
-			one.setVelocity(VECTOR2(-2, 0.5));
-		one.damage(10);
-		one.stunned = 10;
+			one[oneChar]->setVelocity(VECTOR2(-5, 0.5));
+		one[oneChar]->damage(10);
+		one[oneChar]->stunned = 100;
 	}
 }
 
@@ -185,51 +224,87 @@ void StickFight::collisions()
 void StickFight::render()
 {
 	graphics->spriteBegin();
-	if(activeMenu) {
-		mainMenu->getActiveMenu()->displayMenu(frameTime);
-	} else {	// All other cases
-		switch(gameStates) {
-		case SPLASH_SCREEN:
-			splashScreen.draw();
-			if(timeInState<.75) {
-				text.print("PRESS SPACE TO CONTINUE",GAME_WIDTH/2-160,GAME_HEIGHT-40);
-			} else if(timeInState>1.5) {
-				timeInState = 0.0;
-			}
-
-			// Render splash screen
-			break;
-		case MENU:
-			// Render menu
-			mainMenu->getActiveMenu()->displayMenu(frameTime);
-			break;
-		case LEVEL1:
-			if (one.getInvincible() > 0)
-				one.draw(SETCOLOR_ARGB(100, 255, 255, 255));
-			else
-				one.draw();
-			if (one.getInvincible() > 0)
-				two.draw(SETCOLOR_ARGB(100, 255, 255, 255));
-			else
-				two.draw();
-			/*if (one.getHitbox() != 0) {
-				one.getHitbox()->draw();
-			}
-			if(two.getHitbox() != 0){
-				two.getHitbox()->draw();
-			}*/
-	
-			for (int i = 0; i < nWalls; i++) walls[i].draw();
-	
-			oneHealth.draw();
-			
-			break;
-		case END:
-			// You won or lost
-			break;
+	switch(gameStates) {
+	case SPLASH_SCREEN:
+		staticImages[0].draw();
+		text.print(		"Heroes and Villians of the Ages", GAME_WIDTH / 2 - 175, GAME_HEIGHT / 2 - 120);
+		if (timeInState > 2) {
+			text.print(	"Meeting for Epic Battle", GAME_WIDTH / 2 - 150, GAME_HEIGHT / 2 - 80);
 		}
+		if (timeInState > 4) {
+			text.print(	"In the Arenas of the Ancients", GAME_WIDTH / 2 - 160, GAME_HEIGHT / 2 - 40);
+		}
+		if (timeInState > 6) {
+			text.print(	"Ohh, and They are Stick Figures", GAME_WIDTH / 2 - 175, GAME_HEIGHT / 2);
+		}
+		if (timeInState > 8) {
+			timeInState = 0.0;
+			gameStates = MENU;
+		}
+		break;
+	case MENU:
+		// Render menu
+		staticImages[0].draw();
+		mainMenu->getActiveMenu()->displayMenu(frameTime);
+		break;
+	case CHARACTER_SELECT:
+		staticImages[0].draw();
 
-		
+		text.print("Choose your character", 100, 10);
+
+		staticImages[1].setX(50);
+		staticImages[1].setY(70);
+		staticImages[1].setScaleX(200);
+		staticImages[1].setScaleY(300);
+		staticImages[1].draw();
+
+		text.print("Player 1", 50, 40);
+
+		one[0]->setX(60);
+		one[0]->setY(80);
+		one[0]->setCurrentFrame(6);
+		one[1]->setX(-60);
+		one[1]->setY(-40);
+		one[1]->setCurrentFrame(0);
+		one[oneChar]->draw();
+
+		if (multiplayer) {
+			staticImages[1].setX(300);
+			staticImages[1].setY(70);
+			staticImages[1].setScaleX(200);
+			staticImages[1].setScaleY(300);
+			staticImages[1].draw();
+
+			text.print("Player 2", 290, 40);
+
+			two[0]->setX(310);
+			two[0]->setY(80);
+			two[0]->setCurrentFrame(6);
+			two[1]->setX(180);
+			two[1]->setY(-40);
+			two[1]->setCurrentFrame(0);
+			two[twoChar]->draw();
+		}
+		break;
+	case LEVEL1:
+		staticImages[2].draw();
+		if (one[oneChar]->getInvincible() > 0)
+			one[oneChar]->draw(SETCOLOR_ARGB(100, 255, 255, 255));
+		else
+			one[oneChar]->draw();
+
+		if (two[twoChar]->getInvincible() > 0)
+			two[twoChar]->draw(SETCOLOR_ARGB(100, 255, 255, 255));
+		else
+			two[twoChar]->draw();
+	
+		oneHealth.draw();
+		twoHealth.draw();
+			
+		break;
+	case END:
+		// You won or lost
+		break;
 	}
 	graphics->spriteEnd();
 }
@@ -266,7 +341,13 @@ void StickFight::gameStateUpdate()
 	}
 	if (gameStates==MENU) {
 		if(mainMenu->getMenuState() == MODE_1_PLAYER) {
-			gameStates = LEVEL1;
+			multiplayer = false;
+			gameStates = CHARACTER_SELECT;
+			timeInState = 0;
+		}
+		if(mainMenu->getMenuState() == MODE_2_PLAYER) {
+			multiplayer = true;
+			gameStates = CHARACTER_SELECT;
 			timeInState = 0;
 		}
 	}

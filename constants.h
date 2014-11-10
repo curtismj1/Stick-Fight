@@ -108,15 +108,21 @@ const UCHAR PADDLE_DOWN = VK_DOWN;
 //
 
 // Assets
-const std::string images[] = { "img/swordSheet.png",
+const std::string images[] = { 
+	"img/swordSheet.png",
 	"img/figure.bmp",
 	"img/wall.bmp",
 	"img/sprite_sheet.png",
 	"img/figure.bmp",
 	"img/health.bmp",
-	"img/splash.png"
+	"img/background1.png"
 };
 const int nTextures = 7;
+
+const int loadImages[] = {
+	2, 1, 6
+};
+const int nImages = 3;
 
 
 // audio files required by audio.cpp
@@ -136,7 +142,7 @@ const char HIT[]   = "hit";
 enum PATTERN_STEP_ACTION {NONE, UP, DOWN, LEFT, RIGHT, TRACK, EVADE, UPLEFT};
 
 // Game states
-enum GameStates {SPLASH_SCREEN, MENU, LEVEL1, END};
+enum GameStates {SPLASH_SCREEN, MENU, CHARACTER_SELECT, LEVEL1, END};
 
 // Menu Constants
 const int MENU_OFFSET = 125;

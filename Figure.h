@@ -5,7 +5,7 @@
 class Figure : public Entity {
 public:
 	Figure();
-	virtual void readInput();
+	virtual void readInput(bool p2);
 	virtual void update(float);
 	void collisions(Entity* walls, int nWalls);
 	Entity* getHitbox() { if (isAttacking) return &hitbox; else return 0; }

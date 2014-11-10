@@ -40,14 +40,15 @@ public:
     void resetAll();
 private:
 	TextureManager* textures;
+	Image* staticImages;
 	TextDX text;
-	Image p1;
-	Image splashScreen;
 
-	Boxer one;
+	Figure** one;
+	int oneChar;
 	Entity oneHealth;
 
-	SwordGuy two;
+	Figure** two;
+	int twoChar;
 	Entity twoHealth;
 
 	Entity* walls;
@@ -57,6 +58,8 @@ private:
 	GameStates gameStates;
 	float timeInState;
 	void gameStateUpdate();
+
+	bool multiplayer;
 };
 
 #endif
