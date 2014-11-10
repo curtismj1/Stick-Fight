@@ -27,6 +27,7 @@ void Boxer::cross(){
 void Boxer::animate(float frameTime) {
 	time += getFrameDelay();
 	if (isWalking) {
+
 		setFrameDelay(0.1);
 		setFrames(0, 5);
 		flipHorizontal(!facingRight);
@@ -35,4 +36,5 @@ void Boxer::animate(float frameTime) {
 		setFrames(6, 11);
 		flipHorizontal(!facingRight);
 	}
+
 }

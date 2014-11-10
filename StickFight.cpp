@@ -48,7 +48,7 @@ void StickFight::initialize(HWND hwnd)
 		walls[i].setEdge(r);
 	}
 
-	if (!one.initialize(this, 180, 260, 6, &textures[3]))
+	if (!one.initialize(this, 200, 260, 6, &textures[3]))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player one"));
 
 	if (!oneHealth.initialize(this, 0, 0, 0, &textures[5]))
