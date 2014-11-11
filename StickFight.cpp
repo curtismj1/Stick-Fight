@@ -114,6 +114,7 @@ void StickFight::initialize(HWND hwnd)
 	std::vector<std::string> menuItems;
 	menuItems.push_back("New Game >");	// Menu 1
 	menuItems.push_back("Sound FX >");	// Menu 2
+	menuItems.push_back("Cheats >");	// Menu 3
 	menuItems.push_back("I'm Feeling Lucky");
 	mainMenu->setMenuItems(menuItems);
 
@@ -140,6 +141,17 @@ void StickFight::initialize(HWND hwnd)
 
 	menu2->setMenuItems(menuItems);
 	menu2->setMenuHeading("Effects");
+
+	// menu3
+	Menu* menu3 = new Menu();
+	menu3->initialize(graphics, input, mainMenu);
+	menuItems.resize(2);
+	menuItems[0] = "On";	// Index 21
+	menuItems[1] = "Off";	// Index 22
+	children[2] = menu3;
+
+	menu3->setMenuItems(menuItems);
+	menu3->setMenuHeading("Cheats");
 	
 
 	mainMenu->setChildren(children);

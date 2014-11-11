@@ -147,9 +147,10 @@ enum GameStates {SPLASH_SCREEN, MENU, CHARACTER_SELECT, INSTRUCTIONS_SINGLE, INS
 
 // Menu Constants
 const int MENU_OFFSET = 125;
-enum menuStates { GAME_MODE = 1, SFX, FEELING_LUCKY, CREDITS,
+enum menuStates { GAME_MODE = 1, SFX, CHEATS, FEELING_LUCKY,
 					MODE_1_PLAYER = 11, MODE_2_PLAYER,
-					SFX_ON = 21, SFX_OFF
+					SFX_ON = 21, SFX_OFF,
+					CHEATS_ON = 31, CHEATS_OFF
 };
 
 #endif
