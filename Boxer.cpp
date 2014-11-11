@@ -12,6 +12,12 @@ void Boxer::setCollisionBox() {
 }
 
 void Boxer::animate(float frameTime) {
+	if(input->isKeyDown(VK_RIGHT) || input->isKeyDown(VK_LEFT)){
+		isWalking = false;
+	}
+	else{
+		isWalking = true;
+	}
 	if (isAttacking) {
 		setFrameDelay(0.05);
 		setFrames(12, 23);

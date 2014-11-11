@@ -116,6 +116,8 @@ void Menu::displayMenu(float frametime)
 			activeMenu->setOffset(activeMenu->getOffset()-300.0f*frametime);
 		if(activeMenu->getOffset() < 0)
 			activeMenu->setOffset(activeMenu->getOffset()+300.0f*frametime);
+		menuItemFont->print("ENTER: Select Item     BACKSPACE: Previous Menu", 10, GAME_HEIGHT-30);
+
 	}
 
 	if(parent != NULL && parent != this) {	// If it's not the root menu
